@@ -294,100 +294,101 @@ const voteImage = contactData?.contactVoteImage?.node;
 
 <script is:inline src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
+<script is:inline src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
 <script is:inline>
-  // 1. Wait for everything to load
-  window.onload = function() {
+  window.addEventListener('DOMContentLoaded', () => {
+    // 1. Configuration (IDs from your working example)
+    const PUBLIC_KEY = "anQHxdNzZ5YbFbYiJ"; 
+    const SERVICE_ID = "service_6mn1qpi";
+    const OWNER_TEMPLATE_ID = "template_gdjebaa";
+    const AUTOREPLY_TEMPLATE_ID = "template_o1uvef9";
+
+    emailjs.init(PUBLIC_KEY);
+
     const form = document.getElementById("contact-form");
     const submitBtn = document.getElementById("submit-btn");
 
-    if (!form) return;
-
-    // 2. Initialize EmailJS immediately
-    emailjs.init("anQHxdNzZ5YbFbYiJ");
-
-    form.addEventListener("submit", function(e) {
-      e.preventDefault(); // Stop the reload
-      
-      // 3. Reset UI
-      const errors = document.querySelectorAll(".error-msg");
-      errors.forEach(el => {
-        el.textContent = "";
-        el.style.display = "none";
+    // Logic from your old site: clear errors on typing
+    form.querySelectorAll("input, textarea").forEach((input) => {
+      input.addEventListener("input", () => {
+        const errorEl = document.getElementById("err-" + input.name);
+        if (errorEl) {
+          errorEl.textContent = "";
+          errorEl.style.display = "none";
+        }
       });
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Checking...";
+    });
 
-      // 4. Manual Data Capture
-      const fd = new FormData(form);
-      const name = fd.get("fullname")?.toString().trim();
-      const email = fd.get("email")?.toString().trim();
-      const phone = fd.get("phone")?.toString().replace(/\D/g, "");
-      const zip = fd.get("zip")?.toString().trim();
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
 
-      let hasErrors = false;
+      // 2. Capture Data (Mapping your new names to variables)
+      const fullname = form.querySelector("input[name='fullname']").value.trim();
+      const email = form.querySelector("input[name='email']").value.trim();
+      const phone = form.querySelector("input[name='phone']").value.replace(/\D/g, "");
+      const zip = form.querySelector("input[name='zip']").value.trim();
+      const message = form.querySelector("textarea[name='message']").value.trim();
 
-      // 5. Hardcoded Validation (Most reliable for Vercel)
-      if (!name || name.length < 2) {
-        document.getElementById("err-fullname").textContent = "Name is required";
-        document.getElementById("err-fullname").style.display = "block";
-        hasErrors = true;
+      // 3. Validation Logic (Taking the "return" idea from your old code)
+      let isValid = true;
+
+      if (!fullname) {
+        showError("err-fullname", "Full name required");
+        isValid = false;
       }
-      
-      if (!email || !email.includes("@")) {
-        document.getElementById("err-email").textContent = "Valid email is required";
-        document.getElementById("err-email").style.display = "block";
-        hasErrors = true;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError("err-email", "Valid email required");
+        isValid = false;
       }
-
-      if (!phone || phone.length < 10) {
-        document.getElementById("err-phone").textContent = "10-digit phone required";
-        document.getElementById("err-phone").style.display = "block";
-        hasErrors = true;
+      if (phone.length < 10) {
+        showError("err-phone", "10-digit phone required");
+        isValid = false;
       }
-
       if (!zip) {
-        document.getElementById("err-zip").textContent = "Zip is required";
-        document.getElementById("err-zip").style.display = "block";
-        hasErrors = true;
+        showError("err-zip", "Zip required");
+        isValid = false;
       }
 
-      // 6. STOP if errors found
-      if (hasErrors) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit the Form";
-        return; 
-      }
+      if (!isValid) return; // This stops the email from sending if validation fails
 
-      // 7. Send Data
-      submitBtn.textContent = "Sending Message";
-      
-      const templateParams = {
-        fullname: name,
+      // 4. Prepare Parameters (Must match your Template {{tags}})
+      const params = {
+        fullname: fullname,
         email: email,
         phone: phone,
         zip: zip,
-        message: fd.get("message")
+        message: message,
+        submitted_at: new Date().toLocaleString()
       };
 
-      emailjs.send("service_6mn1qpi", "template_gdjebaa", templateParams)
-        .then(function() {
-          return emailjs.send("service_6mn1qpi", "template_o1uvef9", templateParams);
-        })
-        .then(function() {
-          document.getElementById("form-status").textContent = "✅ Success! Sent.";
-          document.getElementById("form-status").style.display = "block";
-          document.getElementById("form-status").style.color = "green";
+      // 5. Sending UI
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+
+      emailjs.send(SERVICE_ID, OWNER_TEMPLATE_ID, params)
+        .then(() => emailjs.send(SERVICE_ID, AUTOREPLY_TEMPLATE_ID, params))
+        .then(() => {
+          showError("form-status", "✅ Success! Message sent.", true);
           form.reset();
         })
-        .catch(function(error) {
-          console.error("EmailJS Failed:", error);
-          document.getElementById("form-status").textContent = "❌ Server Error. Try again.";
-          document.getElementById("form-status").style.display = "block";
+        .catch((err) => {
+          console.error(err);
+          showError("form-status", "❌ Delivery failed. Check EmailJS dashboard.");
         })
-        .finally(function() {
+        .finally(() => {
           submitBtn.disabled = false;
           submitBtn.textContent = "Submit the Form";
         });
     });
-  };
+
+    function showError(id, msg, isSuccess = false) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = msg;
+        el.style.display = "block";
+        el.style.color = isSuccess ? "green" : "#ed2121";
+      }
+    }
+  });
 </script>
