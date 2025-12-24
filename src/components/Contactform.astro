@@ -294,12 +294,25 @@ const voteImage = contactData?.contactVoteImage?.node;
     }
 </style>
 
-<script is:inline src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
-<script is:inline>
-  (function() {
-    const init = () => {
-      const PUBLIC_KEY = "anQHxdNzZ5YbFbYiJ"; 
+
+<script client:load>
+  (() => {
+    const waitForEmailJS = () => {
+      return new Promise((resolve) => {
+        const check = () => {
+          if (window.emailjs) resolve();
+          else setTimeout(check, 50);
+        };
+        check();
+      });
+    };
+
+    const init = async () => {
+      await waitForEmailJS();
+
+      const PUBLIC_KEY = "anQHxdNzZ5YbFbYiJ";
       const SERVICE_ID = "service_6mn1qpi";
       const OWNER_TEMPLATE_ID = "template_gdjebaa";
       const AUTOREPLY_TEMPLATE_ID = "template_o1uvef9";
@@ -309,84 +322,77 @@ const voteImage = contactData?.contactVoteImage?.node;
       const form = document.getElementById("contact-form");
       const submitBtn = document.getElementById("submit-btn");
 
-      if (!form) return;
+      if (!form || !submitBtn) return;
 
-      // Function to show/hide errors directly bypassing CSS classes
-      const updateError = (id, msg, show) => {
+      const updateError = (id, msg = "", show = false) => {
         const el = document.getElementById(id);
         if (!el) return;
-        el.textContent = msg || "";
+        el.textContent = msg;
         el.style.display = show ? "block" : "none";
-        el.style.visibility = show ? "visible" : "hidden";
-        el.style.opacity = show ? "1" : "0";
       };
 
-      form.addEventListener("submit", function (e) {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        
-        // Reset all
-        ["err-fullname", "err-email", "err-phone", "err-zip", "form-status"].forEach(id => updateError(id, "", false));
 
-        const fullname = form.querySelector("input[name='fullname']").value.trim();
-        const email = form.querySelector("input[name='email']").value.trim();
-        const phone = form.querySelector("input[name='phone']").value.replace(/\D/g, "");
-        const zip = form.querySelector("input[name='zip']").value.trim();
-        const message = form.querySelector("textarea[name='message']").value.trim();
+        ["err-fullname", "err-email", "err-phone", "err-zip", "form-status"]
+          .forEach(id => updateError(id));
 
-        let isValid = true;
+        const fullname = form.fullname.value.trim();
+        const email = form.email.value.trim();
+        const phone = form.phone.value.replace(/\D/g, "");
+        const zip = form.zip.value.trim();
+        const message = form.message.value.trim();
+
+        let valid = true;
 
         if (!fullname) {
           updateError("err-fullname", "Full name is required", true);
-          isValid = false;
+          valid = false;
         }
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           updateError("err-email", "Valid email required", true);
-          isValid = false;
+          valid = false;
         }
         if (phone.length < 10) {
           updateError("err-phone", "10-digit phone required", true);
-          isValid = false;
+          valid = false;
         }
         if (!zip) {
           updateError("err-zip", "Zip code required", true);
-          isValid = false;
+          valid = false;
         }
 
-        if (!isValid) {
-          console.log("Validation Failed");
-          return; 
-        }
+        if (!valid) return;
 
         submitBtn.disabled = true;
         submitBtn.textContent = "Sending...";
 
         const params = {
-          fullname, email, phone, zip, message,
+          fullname,
+          email,
+          phone,
+          zip,
+          message,
           submitted_at: new Date().toLocaleString()
         };
 
-        emailjs.send(SERVICE_ID, OWNER_TEMPLATE_ID, params)
-          .then(() => emailjs.send(SERVICE_ID, AUTOREPLY_TEMPLATE_ID, params))
-          .then(() => {
-            updateError("form-status", "✅ Success! Message sent.", true);
-            document.getElementById("form-status").style.color = "green";
-            form.reset();
-          })
-          .catch((err) => {
-            console.error("EmailJS Error:", err);
-            updateError("form-status", "❌ Delivery failed. Try again.", true);
-          })
-          .finally(() => {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Submit the Form";
-          });
+        try {
+          await emailjs.send(SERVICE_ID, OWNER_TEMPLATE_ID, params);
+          await emailjs.send(SERVICE_ID, AUTOREPLY_TEMPLATE_ID, params);
+
+          updateError("form-status", "✅ Message sent successfully!", true);
+          document.getElementById("form-status").style.color = "green";
+          form.reset();
+        } catch (err) {
+          console.error(err);
+          updateError("form-status", "❌ Failed to send. Try again.", true);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit the Form";
+        }
       });
     };
 
-    if (document.readyState === "complete") {
-      init();
-    } else {
-      window.addEventListener("load", init);
-    }
+    init();
   })();
 </script>
