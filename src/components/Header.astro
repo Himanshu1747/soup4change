@@ -462,4 +462,20 @@ const menuItems = rawNodes
       ticking = true;
     }
   }, { passive: true });
+
+
+  
+document.addEventListener("DOMContentLoaded", function () {
+    $(".menu-icon").click(function () {
+      $(".header-linksgrids").slideToggle();
+    });
+
+    $(".sub-menu").hide();
+    $(".menu-item-has-children").click(function (e) {
+      e.stopPropagation();
+      $(this).children(".sub-menu").slideToggle();
+    });
+  });
+
+
 </script>
