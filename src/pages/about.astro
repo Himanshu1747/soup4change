@@ -1,0 +1,329 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Contactform from "../components/Contactform.astro";
+import Counter from "../components/Counter.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { queryWordPress } from "../lib/wordpress";
+
+const ABOUT_QUERY = `
+query aboutpage {
+  page(id: "about", idType: URI) {
+    title
+    seo {
+      fullHead
+    }
+    featuredImage {
+      node {
+        mediaItemUrl
+        altText
+      }
+    }
+    shortIntro {
+      whyTrust
+      shelby
+      aboutShelby
+      shelbyImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      voteImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      community
+      communityList
+      politicianImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      politicianHeading
+      politicianParagraph
+      donateSupport {
+        url
+        title
+        target
+      }
+      congressHeading
+    }
+  }
+}
+`;
+
+const aboutpageData = await queryWordPress(ABOUT_QUERY);
+const pagedata = aboutpageData?.page;
+const intro = pagedata?.shortIntro;
+
+// Preload the Hero Image for faster LCP
+const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead useYoast={true} />
+        {pagedata?.seo?.fullHead && <Fragment set:html={pagedata.seo.fullHead} />}
+        {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" />}
+    </head>
+    
+    <body>
+        <Header />
+        
+        <section class="innserbanner-sec">
+            <img
+                src={heroImage || "error"}
+                alt={pagedata?.featuredImage?.node?.altText || "About Shelby"}
+                width="1920"
+                height="707"
+                class="innerbanner-image"
+                fetchpriority="high"
+                decoding="sync"
+                loading="eager"
+            />
+        </section>
+
+        <div class="innercounter">
+            <Counter />
+        </div>
+
+        <section class="whytrustshelby-sec inner-page">
+            <div class="container">
+                <div class="shelby-holders">
+                    <div class="row">
+                        <div class="col-xl-8">
+                            <div class="about-shelby">
+                                <h6 class="fs-60 text-blue">
+                                    {intro?.whyTrust || ""}
+                                </h6>
+                                <h1 class="fs-150 text-blue">
+                                    {intro?.shelby || ""}
+                                </h1>
+                                <div set:html={intro?.aboutShelby || ""} />
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="shelby-image">
+                                <img
+                                    src={intro?.voteImage?.node?.mediaItemUrl || "error"}
+                                    alt="vote"
+                                    height="247"
+                                    width="247"
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="shelby-vote"
+                                />
+                                <img
+                                    src={intro?.shelbyImage?.node?.mediaItemUrl || "error"}
+                                    alt="Shelby"
+                                    width="448"
+                                    height="677"
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="shelbymain-imge"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="community-holders">
+                        <div class="center-datacommunity">
+                            <h2 class="fs-30">
+                                {intro?.community || ""}
+                            </h2>
+                        </div>
+                        <div set:html={intro?.communityList || ""} />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="honestpoltician-sec">
+            <div class="container">
+                <div class="row align-items-center honest-polyician">
+                    <div class="col-lg-5">
+                        <div class="main-imagepoltican">
+                            <img
+                                src={intro?.politicianImage?.node?.mediaItemUrl || "error"}
+                                alt={intro?.politicianHeading || "Politician"}
+                                width="552"
+                                height="635"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="abouthonesty">
+                            <h4 class="fs-60 text-red">
+                                {intro?.politicianHeading || ""}
+                            </h4>
+                            <div set:html={intro?.politicianParagraph || ""} />
+                            <div class="universal-anchor">
+                                <a 
+                                    href={intro?.donateSupport?.url || "#"} 
+                                    target={intro?.donateSupport?.target || "_self"} 
+                                    title={intro?.donateSupport?.title || "Donate"} 
+                                    class="universal-button"
+                                >
+                                    {intro?.donateSupport?.title || "Donate & Support"}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="fs-200 overlap-heading text-center">
+                    {intro?.congressHeading || ""}
+                </h6>
+            </div>
+        </section>
+
+        <div class="yellow-form">
+            <Contactform />
+        </div>
+        
+        <Footer />
+		<style>
+			section.whytrustshelby-sec.inner-page .shelby-holders {
+				color: initial;
+			}
+
+			section.whytrustshelby-sec.inner-page .shelby-holders::after {
+				display: none;
+			}
+
+			section.whytrustshelby-sec.inner-page .shelby-holders {
+				padding: 0;
+			}
+
+			.innercounter {
+				max-width: 1315px;
+				width: 100%;
+				margin: 0 auto;
+				padding: 80px 0px;
+			}
+
+			.innercounter .grid-counter {
+				max-width: 100%;
+			}
+
+			.community-holders {
+				padding: 45px 60px;
+				border-radius: 20px;
+				background: var(--color-blue);
+				color: var(--color-white);
+			}
+
+			.center-datacommunity {
+				text-align: center;
+				padding-bottom: 50px;
+			}
+
+			.community-holders ul li {
+				list-style: disc;
+				font-size: var(--fs-20);
+				font-weight: 400;
+				padding-bottom: 5px;
+			}
+
+			.community-holders ul {
+				padding-left: 10px;
+				display: grid;
+				column-gap: 70px;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+			.abouthonesty {
+				max-width: 868px;
+				width: 100%;
+				margin: 0 auto;
+			}
+
+			.main-imagepoltican {
+				max-width: 552px;
+				width: 100%;
+				overflow: hidden;
+				margin: 0 auto;
+				border-radius: 20px;
+			}
+
+			.abouthonesty .fs-60 {
+				padding-bottom: 30px;
+			}
+
+			.abouthonesty .universal-anchor {
+				padding-top: 50px;
+			}
+
+			section.honestpoltician-sec {
+				padding-top: 50px;
+			}
+
+			@media (max-width: 1600px) {
+				.innercounter {
+					padding: 40px 0px;
+				}
+
+				.abouthonesty {
+					max-width: 90%;
+				}
+
+				.abouthonesty .universal-anchor {
+					padding-top: 20px;
+				}
+
+				.main-imagepoltican {
+					max-width: 450px;
+				}
+
+				section.honestpoltician-sec {
+					padding-top: 20px;
+				}
+			}
+
+			@media (max-width: 1400px) {
+				.abouthonesty .fs-60 {
+					padding-bottom: 15px;
+				}
+
+				.center-datacommunity {
+					padding-bottom: 30px;
+				}
+			}
+
+			@media (max-width: 1199px) {
+				.community-holders {
+					padding: 30px;
+				}
+
+				.community-holders ul {
+					column-gap: 30px;
+				}
+			}
+
+			@media (max-width: 991px) {
+				.honest-polyician {
+					gap: 30px;
+				}
+
+				.abouthonesty {
+					max-width: 100%;
+					text-align: center;
+				}
+			}
+
+			@media (max-width: 767px) {
+				.community-holders ul {
+					grid-template-columns: repeat(1, minmax(0, 1fr));
+				}
+				.center-datacommunity {
+					padding-bottom: 10px;
+				}
+			}
+		</style>
+    </body>
+</html>

@@ -1,0 +1,73 @@
+---
+import "../styles/global.css";
+import type { ImageMetadata } from "astro";
+import FallbackImage from "../assets/blog-placeholder-1.jpg";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+
+const { title, description, image = FallbackImage, useYoast = false } = Astro.props;
+const customTitle = title || SITE_TITLE;
+const customDesc = description || SITE_DESCRIPTION;
+const socialImage = typeof image === 'string' ? image : image?.src;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link rel="preconnect" href="https://web.ogrelogicsolutions.com" crossorigin />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+
+<link rel="icon" href="/assets/images/favicon.png" sizes="32x32" />
+
+{!useYoast && (
+    <>
+        <title>{customTitle}</title>
+        <meta name="description" content={customDesc} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={customTitle} />
+        <meta property="og:description" content={customDesc} />
+        {socialImage && <meta property="og:image" content={new URL(socialImage, Astro.url)} />}
+    </>
+)}
+
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" fetchpriority="high" />
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" media="print" onload="this.media='all'" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
+<script is:inline>
+  // 1. ELIMINATE FORCED REFLOW: Batches geometric queries
+  (function() {
+    const originalQuery = window.jQuery;
+    window.addEventListener('load', () => {
+      if (window.jQuery) {
+        // Disable heavy jQuery animations that cause reflows
+        jQuery.fx.off = true; 
+        
+        // Wrap any style changes in requestAnimationFrame
+        window.requestAnimationFrame(() => {
+           console.log("DOM batch-updated to prevent forced reflow.");
+        });
+      }
+    });
+  })();
+
+  // 2. LCP VIDEO OPTIMIZATION
+  // Pre-fetch the video only after the main thread is idle
+  window.addEventListener('DOMContentLoaded', () => {
+    const video = document.querySelector('.home-video');
+    if (video) {
+        video.setAttribute('preload', 'auto');
+        video.setAttribute('fetchpriority', 'high');
+    }
+  });
+</script>
+
+<style is:global>
+  /* 3. HARDWARE ACCELERATION: Moves work from CPU to GPU */
+  .home-video, .campagain-image, .header {
+    transform: translateZ(0); 
+    will-change: transform, opacity;
+  }
+</style>

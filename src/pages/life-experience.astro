@@ -1,0 +1,499 @@
+---
+import { queryWordPress } from "../lib/wordpress";
+import BaseHead from "../components/BaseHead.astro";
+import Contactform from "../components/Contactform.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+
+const ENDORSEMENT_QUERY = `
+query endorsements {
+  page(id: "life-experience", idType: URI) {
+    title
+    seo {
+      fullHead
+    }
+    featuredImage {
+      node {
+        mediaItemUrl
+        altText
+      }
+    }
+    endorsements {
+      shelbyPoint
+      shelbyParagraph
+      heyEveryone
+      everyoneParagraph
+      donateSupport {
+        url
+        title
+        target
+      }
+      image1 {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      image2 {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      educationTitle
+      eductaionField {
+        fieldParagraph
+        fieldType
+        iconImage {
+          node {
+            mediaItemUrl
+            altText
+          }
+        }
+      }
+      mainImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      mainTitle
+      paragraph
+      buttonlinks {
+        buttonLinks {
+          url
+          title
+          target
+        }
+      }
+    }
+  }
+}
+`;
+
+const pagedata = await queryWordPress(ENDORSEMENT_QUERY);
+const finaldata = pagedata?.page;
+const finalendormsent = finaldata?.endorsements;
+
+// Performance Cache: Extract the Hero Image URL for the Preload tag
+const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead useYoast={true} />
+        {finaldata?.seo?.fullHead && <Fragment set:html={finaldata.seo.fullHead} />}
+        {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" />}
+    </head>
+
+    <body>
+        <Header />
+        <section class="innserbanner-sec">
+            <img
+                src={heroImage || "error"}
+                alt={finaldata?.featuredImage?.node?.altText || "Life Experience"}
+                width="1920"
+                height="707"
+                class="innerbanner-image"
+                loading="eager"
+                fetchpriority="high"
+                decoding="sync"
+            />
+        </section>
+
+        <section class="howshelbygotthis-sec">
+            <div class="container">
+                <div class="centerdata-shelbyy">
+                    <h1 class="fs-60 text-red">
+                        {finalendormsent?.shelbyPoint || ""}
+                    </h1>
+                    <div set:html={finalendormsent?.shelbyParagraph || ""} />
+                </div>
+
+                <div class="row shelby-row">
+                    <div class="col-lg-6">
+                        <div class="hey-everyone">
+                            <h2 class="fs-60 text-blue">
+                                {finalendormsent?.heyEveryone || ""}
+                            </h2>
+                            <div set:html={finalendormsent?.everyoneParagraph || ""} />
+                            <div class="universal-anchor">
+                                <a
+                                    href={finalendormsent?.donateSupport?.url}
+                                    target={finalendormsent?.donateSupport?.target || "_self"}
+                                    title={finalendormsent?.donateSupport?.title || "Donate"}
+                                    class="universal-button"
+                                >
+                                    {finalendormsent?.donateSupport?.title || "Donate & Support"}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="image-view">
+                            <img
+                                src={finalendormsent?.image1?.node?.mediaItemUrl || "error"}
+                                alt={finalendormsent?.image1?.node?.altText || "Shelby"}
+                                class="first-image"
+                                width="425"
+                                height="319"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                            <img
+                                src={finalendormsent?.image2?.node?.mediaItemUrl || "error"}
+                                alt={finalendormsent?.image2?.node?.altText || "Community"}
+                                class="second-image"
+                                width="355"
+                                height="399"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="education-sec">
+            <div class="container">
+                <div class="center-eductaion">
+                    <h2 class="fs-60 text-blue">
+                        {finalendormsent?.educationTitle || ""}
+                    </h2>
+                </div>
+
+                <div class="grid-education">
+                    {
+                        finalendormsent?.eductaionField?.map((allfields) => (
+                            <div class="highscholl-holders">
+                                <div class="inside-dataa">
+                                    <img
+                                        src={allfields?.iconImage?.node?.mediaItemUrl || "error"}
+                                        alt={allfields?.fieldType || "Icon"}
+                                        height="48"
+                                        width="48"
+                                        loading="lazy"
+                                        decoding="async"
+                                        class="education-icon"
+                                    />
+                                    <h4 class="fs-30">
+                                        {allfields?.fieldType || ""}
+                                    </h4>
+                                    <p>
+                                        {allfields?.fieldParagraph || ""}
+                                    </p>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="stillediting-sec">
+            <div class="container">
+                <div class="row align-items-center row-editing">
+                    <div class="col-lg-6">
+                        <div class="editing-image">
+                            <img
+                                src={finalendormsent?.mainImage?.node?.mediaItemUrl || "error"}
+                                alt={finalendormsent?.mainTitle || "Experience"}
+                                width="442"
+                                height="708"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="editing-details">
+                            <h3 class="fs-60">
+                                {finalendormsent?.mainTitle || ""}
+                            </h3>
+                            <div set:html={finalendormsent?.paragraph || ""} />
+                            <div class="gridbuttonss">
+                                {
+                                    finalendormsent?.buttonlinks?.map((alllinks) => (
+                                        <div class="universal-anchor">
+                                            <a
+                                                href={alllinks?.buttonLinks?.url || "#"}
+                                                title={alllinks?.buttonLinks?.title || "Link"}
+                                                target={alllinks?.buttonLinks?.target || "_self"}
+                                                class="universal-button"
+                                            >
+                                                {alllinks?.buttonLinks?.title || "Click Here"}
+                                            </a>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="blue-form">
+            <Contactform />
+        </div>
+
+        <Footer />
+            <style>
+            .centerdata-shelbyy {
+                max-width: 895px;
+                width: 100%;
+                margin: 0 auto;
+                text-align: center;
+            }
+            .centerdata-shelbyy .fs-60,
+            .hey-everyone .fs-60 {
+                padding-bottom: 20px;
+            }
+
+            .hey-everyone {
+                max-width: 92%;
+                width: 100%;
+            }
+            .hey-everyone p {
+                font-size: var(--fs-20);
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+            }
+
+            .hey-everyone .universal-anchor {
+                padding-top: 50px;
+            }
+
+            .image-view img {
+                max-width: fit-content;
+                position: relative;
+                border-radius: 20px;
+                overflow: hidden;
+            }
+
+            .image-view {
+                max-width: 775px;
+                width: 100%;
+                /* background: red; */
+                display: flex;
+                position: relative;
+                z-index: 1;
+            }
+            .image-view .second-image {
+                margin-top: 7%;
+                z-index: -11;
+                transform: translateX(-6%);
+            }
+
+            .image-view img.first-image {
+                z-index: -1;
+                height: fit-content;
+            }
+
+            section.howshelbygotthis-sec {
+                padding: 60px 0px;
+            }
+
+            .centerdata-shelbyy {
+                padding-bottom: 135px;
+            }
+
+            section.education-sec {
+                padding: 50px 0px;
+                background: rgba(63, 44, 188, 0.1);
+            }
+            .highscholl-holders {
+                max-width: 305px;
+                width: 100%;
+                min-height: 368px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 30px;
+                border-radius: 30px;
+                background: var(--color-yellow);
+                color: var(--color-white);
+                text-align: center;
+            }
+
+            .highscholl-holders .fs-30 {
+                font-weight: 500;
+                padding-bottom: 15px;
+            }
+
+            img.education-icon {
+                max-width: 48px;
+                width: 100%;
+                margin: 0 auto 35px;
+            }
+
+            .highscholl-holders p {
+                font-size: var(--fs-20);
+                font-weight: 500;
+            }
+
+            .grid-education {
+                display: grid;
+                gap: 50px;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                max-width: fit-content;
+                margin: 0 auto;
+                width: 100%;
+            }
+
+            .center-eductaion {
+                max-width: fit-content;
+                margin: 0 auto;
+                width: 100%;
+                padding-bottom: 75px;
+            }
+
+            .grid-education .highscholl-holders:nth-child(2) {
+                background: #8a38f5;
+            }
+            .grid-education .highscholl-holders:nth-child(3) {
+                background: #d51d75;
+            }
+            .grid-education .highscholl-holders:nth-child(4) {
+                background: #1e1e1e;
+            }
+
+            .editing-image {
+                max-width: fit-content;
+                margin: 0 auto;
+                border-radius: 20px;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            .gridbuttonss {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                padding-top: 30px;
+            }
+
+            .gridbuttonss .universal-anchor {
+                max-width: 253px;
+                width: 100%;
+                display: block;
+            }
+
+            .gridbuttonss .universal-anchor a {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .editing-details .fs-60 {
+                padding-bottom: 20px;
+            }
+
+           .editing-details p {
+                color: var(--color-blue) !important;
+            }
+
+            section.stillediting-sec {
+                padding: 85px 0px;
+            }
+
+            
+
+            @media (max-width: 1600px) {
+                .centerdata-shelbyy {
+                    padding-bottom: 70px;
+                }
+                .highscholl-holders {
+                    min-height: auto;
+                    padding: 30px 20px;
+                }
+
+                .center-eductaion {
+                    padding-bottom: 50px;
+                }
+
+                section.stillediting-sec {
+                    padding: 60px 0px;
+                }
+            }
+
+            @media (max-width: 1400px) {
+                .centerdata-shelbyy {
+                    padding-bottom: 40px;
+                }
+
+                section.howshelbygotthis-sec {
+                    padding: 40px 0px;
+                }
+
+                .hey-everyone .universal-anchor {
+                    padding-top: 20px;
+                }
+
+                .editing-image {
+                    max-width: 300px;
+                }
+
+                section.education-sec,
+                section.stillediting-sec {
+                    padding: 40px 0px;
+                }
+            }
+
+            @media (max-width: 1199px) {
+                .grid-education {
+                    gap: 30px;
+                }
+
+                .center-eductaion {
+                    padding-bottom: 30px;
+                }
+            }
+
+            @media (max-width: 991px) {
+                .hey-everyone {
+                    max-width: 100%;
+                    padding-bottom: 30px;
+                }
+
+                .centerdata-shelbyy {
+                    padding-bottom: 30px;
+                }
+
+                .centerdata-shelbyy .fs-60,
+                .hey-everyone .fs-60 {
+                    padding-bottom: 15px;
+                }
+
+                .grid-education {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .editing-details {
+                    padding-top: 30px;
+                    text-align: center;
+                }
+                .gridbuttonss {
+                    justify-content: center;
+                }
+            }
+            @media (max-width: 767px) {
+                .centerdata-shelbyy {
+                    padding-bottom: 20px;
+                }
+
+                img.education-icon {
+                    margin: 0 auto 15px;
+                }
+            }
+
+            @media (max-width: 575px) {
+                .grid-education {
+                    grid-template-columns: repeat(1, minmax(0, 1fr));
+                }
+            }
+        </style>
+    </body>
+</html>

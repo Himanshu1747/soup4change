@@ -1,0 +1,218 @@
+---
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import { queryWordPress } from "../lib/wordpress";
+
+const POPUP_DATA = `
+query popupdata {
+  page(id: "popup", idType: URI) {
+    popup {
+      backgroundImage {
+        node {
+          mediaItemUrl
+        }
+      }
+      subTitle
+      mainTitle
+      donateButton {
+        url
+        title
+        target
+      }
+      shelbyImage {
+        node {
+          mediaItemUrl
+        }
+      }
+      logo {
+        node {
+          mediaItemUrl
+        }
+      }
+    }
+  }
+}
+`;
+
+const pagedata = await queryWordPress(POPUP_DATA);
+const finaldata = pagedata?.page?.popup;
+const bgImage = finaldata?.backgroundImage?.node?.mediaItemUrl || "bg-image.webp";
+---
+
+
+
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box" style="background-image: url(bg-image.webp);">
+        <div class="close-icon">&times;</div>
+        <div class="gridpopup">
+            <div class="logomain">
+                <img
+                    src={finaldata?.logo?.node?.mediaItemUrl || "error"}
+                    alt="footer"
+                    width="393"
+                    height="223"
+                    loading="lazy"
+                    
+                />
+            </div>
+            <div class="content-data">
+                <h6 class="fs-30">{finaldata?.subTitle || "error"}</h6>
+                <h4 class="fs-60">{finaldata?.mainTitle || "error"}</h4>
+                <div class="universal-anchor">
+                    <a
+                        href={finaldata?.donateButton?.url || "error"}
+                        title={finaldata?.mainTitle || "error"}
+                        target={finaldata?.donateButton?.target || "error"}
+                        class="universal-button">{finaldata?.donateButton?.title || "error"}</a
+                    >
+                </div>
+            </div>
+            <img
+                src={finaldata?.shelbyImage?.node?.mediaItemUrl || "error"}
+                alt={finaldata?.mainTitle || "error"}
+                width="200"
+                height="303"
+                loading="lazy"
+                class="shelby-imagenew"
+            />
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(13, 13, 13, 0.692);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        display: none;
+        z-index: 1000;
+    }
+
+    .modal-box {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-height: 80%;
+        overflow-y: auto;
+        color: var(--color-white);
+        padding: 20px;
+        max-width: 1135px;
+        width: 100%;
+        padding-top: 30px;
+        min-height: 630px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom center;
+    }
+    .logomain {
+        max-width: 395px;
+        width: 100%;
+    }
+
+    .content-data {
+        max-width: 510px;
+        width: 100%;
+    }
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+    .close-icon {
+        max-width: 50px;
+        position: absolute;
+        top: -4px;
+        right: 1%;
+        cursor: pointer;
+        font-size: 35px;
+    }
+
+    .close-icon svg,
+    .close-icon img {
+        height: 40px;
+        width: 40px;
+    }
+
+    .gridpopup {
+        display: flex;
+        gap: 60px;
+        justify-content: space-between;
+        /* position: relative; */
+    }
+    img.shelby-imagenew {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        max-width: 200px;
+        width: 100%;
+    }
+
+    .content-data .universal-anchor {
+        padding-top: 20px;
+    }
+
+    @media (max-width: 1399px) {
+        .modal-box {
+            max-width: 991px;
+            min-height: 459px;
+        }
+        .logomain {
+            max-width: 250px;
+        }
+
+        .content-data {
+            max-width: 400px;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .modal-box {
+            max-width: 92%;
+        }
+
+        .gridpopup {
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            margin: 0 auto;
+            gap: 20px;
+        }
+        .logomain {
+            margin: 0 auto;
+        }
+    }
+</style>
+
+<script>
+  const setupModal = () => {
+    const overlay = document.getElementById('modalOverlay');
+    const openBtn = document.querySelector('.open-modaldata');
+    const closeBtn = document.querySelector('.close-icon');
+    const modalBox = document.querySelector('.modal-box');
+    const openModal = () => overlay.style.display = 'flex';
+    const closeModal = () => overlay.style.display = 'none';
+
+    setTimeout(openModal, 10000);
+    openBtn?.addEventListener('click', openModal);
+    closeBtn?.addEventListener('click', closeModal);
+    overlay?.addEventListener('click', (event) => {
+      if (!modalBox.contains(event.target as Node)) {
+        closeModal();
+      }
+    });
+  };
+  setupModal();
+  document.addEventListener('astro:after-swap', setupModal);
+</script>

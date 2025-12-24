@@ -1,0 +1,318 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Contactform from "../components/Contactform.astro";
+import Counter from "../components/Counter.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { queryWordPress } from "../lib/wordpress";
+
+/**
+ * 1. OPTIMIZED DATA FETCHING
+ * Ensure the query is lean and execution is awaited before rendering.
+ */
+const HOMEPAGE_QUERY = `
+query homepage {
+  page(id: "/", idType: URI) {
+    seo { fullHead }
+    homepage {
+      videoBanner { node { mediaItemUrl } }
+      videoMain { node { mediaItemUrl } }
+      videoText
+      congressTitle
+      honestPolitician
+      paragraph
+      readmore { url title target }
+      campaign {
+        campaignTitle
+        campaignParagraph
+        campaignImage { node { mediaItemUrl altText } }
+        voteImage { node { mediaItemUrl altText } }
+      }
+      whyTrust
+      shelbyTitle
+      shelbyPargraph
+      aboutShelbyButton { url title target }
+      donateSupportButton { url title target }
+      shelbyImage { node { mediaItemUrl altText } }
+      shelbyVote { node { mediaItemUrl altText } }
+      forThePeople
+      mainTitle
+      pargraphJourny
+      journeyDetails {
+        journeytitle
+        iconImage { node { mediaItemUrl altText } }
+      }
+      deliveringTitle
+      deliveringParagraph
+      delivering {
+        iconImage { node { mediaItemUrl altText } }
+        fieldName
+        fieldParagraph
+      }
+    }
+  }
+}
+`;
+
+const homepageData = await queryWordPress(HOMEPAGE_QUERY);
+const page = homepageData?.page;
+const homePage = page?.homepage;
+
+// Asset caching variables
+const videoPoster = homePage?.videoBanner?.node?.mediaItemUrl || "";
+const videoUrl = homePage?.videoMain?.node?.mediaItemUrl || "";
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=30');
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+    <BaseHead useYoast={true} />
+    {page?.seo?.fullHead && <Fragment set:html={page.seo.fullHead} />}
+    
+    {videoPoster && <link rel="preload" as="image" href={videoPoster} fetchpriority="high" />}
+    {videoUrl && <link rel="preload" as="video" href={videoUrl} crossorigin="anonymous" fetchpriority="high" />}
+    
+    <style>
+        .home-video { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; }
+    </style>
+</head>
+<body>
+    <Header />
+    
+    <section class="hombanner-sec">
+        {
+            videoUrl ? (
+                <video
+                    src={videoUrl}
+                    poster={videoPoster}
+                    loop
+                    muted
+                    playsinline
+                    autoplay
+                    fetchpriority="high"
+                    class="home-video"
+                    preload="auto"
+                />
+            ) : (
+                <p>Video not available</p>
+            )
+        }
+    </section>
+
+    <div class="sliderdata">
+        <div class="marquee">
+            <div class="marquee-track" id="marqueeTrack">
+                <div class="marquee-content" id="marqueeContent">
+                    {homePage?.videoText || "data not available"}
+                </div>
+                <div class="marquee-content" aria-hidden="true">
+                    {homePage?.videoText || "data not available"}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="honest-poltician">
+        <div class="container">
+            <h1 class="fs-200 overlap-heading">{homePage?.congressTitle || ""}</h1>
+            <div class="row align-items-center">
+                <div class="col-xl-5">
+                    <div class="honest-politician_holders">
+                        <span class="placeholder_text">{homePage?.honestPolitician || ""}</span>
+                        <h2 class="fs-80">By the People, For the People</h2>
+                    </div>
+                </div>
+                <div class="col-xl-7">
+                    <div class="peope-power">
+                        <div class="allabout_peope" set:html={homePage?.paragraph} />
+                        <div class="button-data">
+                            <div class="universal-anchor">
+                                <a href={homePage?.readmore?.url} title={homePage?.readmore?.title} class="universal-button">{homePage?.readmore?.title}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gridby-people">
+                {homePage?.campaign?.map((itemss) => (
+                    <div class="maincamagain-holders">
+                        <img src={itemss?.campaignImage?.node?.mediaItemUrl} alt={itemss?.campaignTitle || "campaign"} width="510" height="575" class="campagain-image" loading="lazy" decoding="async" />
+                        <div class="campagain-data">
+                            <div>
+                                <img src={itemss?.voteImage?.node?.mediaItemUrl} alt="vote" height="100" width="100" class="vote-image" loading="lazy" decoding="async" />
+                                <h5 class="fs-30">{itemss?.campaignTitle || "error"}</h5>
+                                <p>{itemss?.campaignParagraph || "error"}</p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <section class="whytrustshelby-sec">
+        <div class="container">
+            <div class="shelby-holders" style="background-image: url(/wireframe-image.png);">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="about-shelby">
+                            <h6 class="fs-60">{homePage?.whyTrust || ""}</h6>
+                            <h2 class="fs-150">{homePage?.shelbyTitle || ""}</h2>
+                            <div set:html={homePage?.shelbyPargraph} />
+                            <div class="grid-button">
+                                <div class="universal-anchor">
+                                    <a href={homePage?.aboutShelbyButton?.url} title={homePage?.aboutShelbyButton?.title} target={homePage?.aboutShelbyButton?.target} class="universal-button red-text">About Shelby</a>
+                                </div>
+                                <div class="universal-anchor">
+                                    <a href={homePage?.donateSupportButton?.url} title={homePage?.donateSupportButton?.title} target={homePage?.donateSupportButton?.target} class="universal-button">{homePage?.donateSupportButton?.title}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="shelby-image">
+                            <img src={homePage?.shelbyVote?.node?.mediaItemUrl} alt="vote" height="247" width="247" loading="lazy" decoding="async" class="shelby-vote" />
+                            <img src={homePage?.shelbyImage?.node?.mediaItemUrl} alt={homePage?.shelbyTitle || ""} width="448" height="677" loading="lazy" decoding="async" class="shelbymain-imge" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="journy-sec">
+        <div class="container">
+            <div class="row journy-row">
+                <div class="col-lg-6">
+                    <div class="journty-data">
+                        <div class="journy-content">
+                            <div class="gridbr">
+                                <span class="placeholder_text">{homePage?.honestPolitician || ""}</span>
+                                <span class="placeholder_text">{homePage?.forThePeople || "error"}</span>
+                            </div>
+                            <h3 class="fs-60 text-blue">{homePage?.mainTitle || "error"}</h3>
+                            <div set:html={homePage?.pargraphJourny} />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="grid-keypoints">
+                        {homePage?.journeyDetails?.map((itemsdata) => (
+                            <div class="school-holders">
+                                <div class="inside-data">
+                                    <img src={itemsdata?.iconImage?.node?.mediaItemUrl || "error"} alt={itemsdata?.journeytitle || "icon"} height="48" width="48" loading="lazy" decoding="async" class="icon-image" />
+                                    <p>{itemsdata?.journeytitle || "error"}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <Counter />
+        </div>
+    </section>
+
+    <section class="workinfamilies-sec">
+        <div class="container">
+            <div class="center-data">
+                <h5 class="fs-50">{homePage?.deliveringTitle || "error"}</h5>
+                <div set:html={homePage?.deliveringParagraph || "error"} />
+            </div>
+            <div class="gridworking-families">
+                {homePage?.delivering?.map((deleveringitems) => (
+                    <div class="families-data">
+                        <div class="grid-famlies">
+                            <img src={deleveringitems?.iconImage?.node?.mediaItemUrl} alt={deleveringitems?.fieldName} height="45" width="45" loading="lazy" decoding="async" class="families-icon" />
+                            <h6 class="fs-30">{deleveringitems?.fieldName}</h6>
+                        </div>
+                        <p>{deleveringitems?.fieldParagraph} </p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <div class="form-datahompage">
+        <Contactform />
+    </div>
+
+    <Footer />
+
+    <style>
+        /* (Your CSS remains exactly the same as provided) */
+        .hombanner-sec { width: 100%; height: 955px; position: relative; overflow: hidden; }
+        video.home-video { position: absolute; inset: 0; width: 100%; object-fit: cover; height: 100%; object-position: center; }
+        .sliderdata { background: var(--color-red); padding: 22px 0; overflow: hidden; color: #fff; }
+        .marquee { width: 100%; overflow: hidden; position: relative; }
+        .marquee-track { display: flex; width: max-content; animation: scroll-left linear infinite; animation-play-state: running; }
+        .marquee-content { white-space: nowrap; font-size: 30px; font-weight: 700; padding-right: 10px; }
+        @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(var(--marquee-distance)); } }
+        .marquee:hover .marquee-track { animation-play-state: paused; }
+        .honest-politician_holders { max-width: 570px; width: 100%; }
+        .honest-politician_holders .fs-80 { border-right: 1px solid var(--color-1E1E1E); padding-right: 20px; }
+        .allabout_peope p { color: var(--color-1E1E1E); font-size: var(--fs-30); font-style: normal; font-weight: 400; line-height: inherit; }
+        .allabout_peope { max-width: 567px; width: 100%; }
+        .peope-power { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+        section.honest-poltician { position: relative; }
+        .maincamagain-holders { height: 575px; overflow: hidden; max-width: 510px; width: 100%; margin: 0 auto; position: relative; border-radius: 30px; }
+        .campagain-data { position: absolute; background: var(--color-blue); color: var(--color-white); min-height: 195px; bottom: 0; left: 0; right: 0; width: 100%; padding: 30px 20px; transition: 0.3s ease-in; opacity: 0; display: flex; align-items: end; }
+        .maincamagain-holders:hover .campagain-data { opacity: 1; }
+        .campagain-image { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; object-position: center; transition: 0.3s ease-in; }
+        .maincamagain-holders:hover .campagain-image { filter: grayscale(1); }
+        .maincamagain-holders p { font-size: 20px; font-style: normal; font-weight: 400; line-height: normal; }
+        .gridby-people { display: grid; gap: 34px; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 100%; margin: 0 auto; width: 100%; padding-top: 165px; }
+        .gridbr { display: flex; gap: 20px; flex-wrap: wrap; padding-bottom: 10px; }
+        .school-holders { max-width: 302px; width: 100%; min-height: 298px; border-radius: 30px; background: var(--color-yellow); color: var(--color-white); display: flex; align-items: center; justify-content: center; text-align: center; margin: 0 auto; }
+        .grid-keypoints { display: grid; gap: 40px; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 652px; width: 100%; margin: 0 auto; }
+        .school-holders p { font-size: var(--fs-30); font-style: normal; font-weight: 500; line-height: var(--lh-40); padding-top: 40px; }
+        .grid-keypoints .school-holders:nth-child(2) { background: #8a38f5; }
+        .grid-keypoints .school-holders:nth-child(3) { background: var(--color-red); }
+        .grid-keypoints .school-holders:nth-child(4) { background: #1e1e1e; }
+        .journy-row { align-items: center; }
+        .journty-data { max-width: 665px; width: 100%; }
+        .journy-content .fs-60 { padding-bottom: 30px; }
+        .inside-data { max-width: 232px; width: 100%; margin: 0 auto; }
+        section.journy-sec { padding: 50px 0px 130px 0px; }
+        section.workinfamilies-sec { padding: 60px 0px 95px 0px; background: var(--color-blue); color: var(--color-white); }
+        .families-data { max-width: 385px; width: 100%; margin: 0 auto; border-radius: 20px; border: 1px solid var(--color-white); background: rgba(255, 255, 255, 0.3); box-shadow: 0 10px 20px 0 rgba(63, 44, 188, 0.1); backdrop-filter: blur(5px); padding: 35px 25px; }
+        .families-data p { font-size: 20px; font-style: normal; font-weight: 400; line-height: normal; }
+        .grid-famlies { display: flex; align-items: center; gap: 30px; padding-bottom: 35px; }
+        .families-icon { width: 45px; height: 45px; }
+        .families-data .fs-30 { color: var(--color-yellow); max-width: fit-content; width: 100%; }
+        .gridworking-families { display: grid; gap: 60px; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: fit-content; margin: 0 auto; width: 100%; }
+        .center-data { max-width: fit-content; margin: 0 auto; padding-bottom: 80px; width: 100%; text-align: center; }
+        .journy-row { padding-bottom: 190px; }
+        @media (max-width: 1600px) { .hombanner-sec { height: 734px; } .marquee-content { font-size: 22px; } .sliderdata { padding: 15px 0px; } .maincamagain-holders { height: 520px; } .maincamagain-holders p { font-size: 18px; line-height: 24px; } .campagain-data { padding: 20px 15px; } .gridby-people { padding-top: 100px; } .school-holders { max-width: 275px; min-height: 221px; } .grid-keypoints { gap: 30px; max-width: 580px; } section.journy-sec { padding: 50px 0px 70px 0px; } .journy-content .fs-60 { padding-bottom: 10px; } .center-data { padding-bottom: 40px; } .grid-famlies { padding-bottom: 20px; } .families-data p { font-size: 16px; line-height: 24px; } .gridworking-families { gap: 30px; } section.workinfamilies-sec { padding: 60px 0px; } .journy-row { padding-bottom: 70px; } }
+        @media (max-width: 1399px) { .hombanner-sec { height: 607px; } .marquee-content { font-size: 18px; } .sliderdata { padding: 10px 0px; } .maincamagain-holders { height: 450px; } .campagain-data { min-height: auto; } .vote-image { max-width: 70px; } .gridby-people { padding-top: 70px; } .school-holders p { padding-top: 20px; } .school-holders { max-width: 223px; min-height: 180px; padding: 20px; } .grid-keypoints { gap: 20px; max-width: fit-content; } section.journy-sec { padding: 40px 0px; } .families-data { padding: 20px; } .grid-famlies { padding-bottom: 10px; } section.workinfamilies-sec { padding: 40px 0px; } .center-data { padding-bottom: 30px; } }
+        @media (max-width: 1199px) { .honest-politician_holders .fs-80 { padding-right: 0; border: none; padding-bottom: 15px; } .honest-politician_holders, .allabout_peope { max-width: 100%; width: 100%; } .peope-power { flex-direction: column; align-items: start; gap: 20px; max-width: 100%; width: 100%; } section.honest-poltician { padding: 30px 0px; } video.home-video { scale: 1.1; } .gridby-people { padding-top: 40px; grid-template-columns: repeat(2, minmax(0, 1fr)); } .gridworking-families { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; } .journy-row { padding-bottom: 70px; } }
+        @media (max-width: 991px) { .maincamagain-holders { height: 396px; } .maincamagain-holders p { font-size: 16px; line-height: 24px; } .grid-keypoints { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: fit-content; margin: 0 auto; padding-top: 30px; } .school-holders { margin: 0; } section.journy-sec { padding: 20px 0px 30px 0px; } }
+        @media (max-width: 767px) { .gridby-people { grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 20px; } .maincamagain-holders { max-width: 400px; } .campagain-data { padding: 10px; } .grid-famlies { gap: 10px; } }
+        @media (max-width: 575px) { section.honest-poltician { padding: 20px 0px; } .gridworking-families { grid-template-columns: repeat(1, minmax(0, 1fr)); } }
+    </style>
+
+    <script is:inline>
+        (function() {
+            const initMarquee = () => {
+                const track = document.getElementById("marqueeTrack");
+                const content = document.getElementById("marqueeContent");
+                if (track && content) {
+                    // Use getBoundingClientRect for sub-pixel precision (prevents jitter)
+                    const contentWidth = content.getBoundingClientRect().width;
+                    const speed = 70; 
+                    track.style.setProperty("--marquee-distance", `-${contentWidth}px`);
+                    track.style.animationDuration = `${contentWidth / speed}s`;
+                }
+            };
+
+            // Optimization: Delay non-critical JS until browser is idle
+            if (window.requestIdleCallback) {
+                window.requestIdleCallback(initMarquee);
+            } else {
+                setTimeout(initMarquee, 200);
+            }
+        })();
+    </script>
+</body>
+</html>
