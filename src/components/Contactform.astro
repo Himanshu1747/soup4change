@@ -66,13 +66,8 @@ const voteImage = contactData?.contactVoteImage?.node;
                                             type="text"
                                             name="fullname"
                                             placeholder="Full Name"
+                                            required
                                         />
-                                        <p
-                                            id="err-fullname"
-                                            class="error-msg"
-                                            style="display:none; "
-                                        >
-                                        </p>
                                     </div>
                                 </div>
 
@@ -82,8 +77,8 @@ const voteImage = contactData?.contactVoteImage?.node;
                                             type="email"
                                             name="email"
                                             placeholder="Email"
+                                            required
                                         />
-                                        <p id="err-email" class="error-msg"></p>
                                     </div>
                                 </div>
 
@@ -93,8 +88,8 @@ const voteImage = contactData?.contactVoteImage?.node;
                                             type="tel"
                                             name="phone"
                                             placeholder="Contact"
+                                            required
                                         />
-                                        <p id="err-phone" class="error-msg"></p>
                                     </div>
                                 </div>
 
@@ -104,8 +99,8 @@ const voteImage = contactData?.contactVoteImage?.node;
                                             type="text"
                                             name="zip"
                                             placeholder="Zip Code"
+                                            required
                                         />
-                                        <p id="err-zip" class="error-msg"></p>
                                     </div>
                                 </div>
 
@@ -337,31 +332,33 @@ const voteImage = contactData?.contactVoteImage?.node;
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        // Clear previous messages
         ["err-fullname", "err-email", "err-phone", "err-zip", "form-status"]
           .forEach(id => updateError(id));
 
         const fullname = form.fullname.value.trim();
         const email = form.email.value.trim();
-        const phone = form.phone.value.replace(/\D/g, "");
+        const phone = form.phone.value.trim();
         const zip = form.zip.value.trim();
         const message = form.message.value.trim();
 
         let valid = true;
 
+        // Simple check: Is the field empty?
         if (!fullname) {
-          updateError("err-fullname", "Full name is required", true);
+          updateError("err-fullname", "Name is required", true);
           valid = false;
         }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          updateError("err-email", "Valid email required", true);
+        if (!email) {
+          updateError("err-email", "Email is required", true);
           valid = false;
         }
-        if (phone.length < 10) {
-          updateError("err-phone", "10-digit phone required", true);
+        if (!phone) {
+          updateError("err-phone", "Phone is required", true);
           valid = false;
         }
         if (!zip) {
-          updateError("err-zip", "Zip code required", true);
+          updateError("err-zip", "Zip code is required", true);
           valid = false;
         }
 
@@ -388,7 +385,8 @@ const voteImage = contactData?.contactVoteImage?.node;
           form.reset();
         } catch (err) {
           console.error(err);
-          updateError("form-status", "❌ Failed to send. Try again.", true);
+          updateError("form-status", "❌ Failed to send.", true);
+          document.getElementById("form-status").style.color = "red";
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = "Submit the Form";
