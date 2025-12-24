@@ -59,49 +59,72 @@ const voteImage = contactData?.contactVoteImage?.node;
                         </div>
 
                         <form id="contact-form">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="universa-input">
-        <input type="text" name="fullname" placeholder="Full Name" />
-        <p id="err-fullname" class="error-msg"></p>
-      </div>
-    </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="universa-input">
+                                        <input
+                                            type="text"
+                                            name="fullname"
+                                            placeholder="Full Name"
+                                        />
+                                        <p id="err-fullname" class="error-msg">
+                                        </p>
+                                    </div>
+                                </div>
 
-    <div class="col-md-12">
-      <div class="universa-input">
-        <input type="email" name="email" placeholder="Email" />
-        <p id="err-email" class="error-msg"></p>
-      </div>
-    </div>
+                                <div class="col-md-12">
+                                    <div class="universa-input">
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="Email"
+                                        />
+                                        <p id="err-email" class="error-msg"></p>
+                                    </div>
+                                </div>
 
-    <div class="col-md-6">
-      <div class="universa-input">
-        <input type="tel" name="phone" placeholder="Contact" />
-        <p id="err-phone" class="error-msg"></p>
-      </div>
-    </div>
+                                <div class="col-md-6">
+                                    <div class="universa-input">
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            placeholder="Contact"
+                                        />
+                                        <p id="err-phone" class="error-msg"></p>
+                                    </div>
+                                </div>
 
-    <div class="col-md-6">
-      <div class="universa-input">
-        <input type="text" name="zip" placeholder="Zip Code" />
-        <p id="err-zip" class="error-msg"></p>
-      </div>
-    </div>
+                                <div class="col-md-6">
+                                    <div class="universa-input">
+                                        <input
+                                            type="text"
+                                            name="zip"
+                                            placeholder="Zip Code"
+                                        />
+                                        <p id="err-zip" class="error-msg"></p>
+                                    </div>
+                                </div>
 
-    <div class="col-md-12">
-      <div class="universa-input">
-        <textarea name="message" placeholder="Message" rows="6"></textarea>
-      </div>
-    </div>
+                                <div class="col-md-12">
+                                    <div class="universa-input">
+                                        <textarea
+                                            name="message"
+                                            placeholder="Message"
+                                            rows="6"></textarea>
+                                    </div>
+                                </div>
 
-    <div class="col-md-12">
-      <div class="submit-button">
-        <button type="submit" id="submit-btn">Submit the Form</button>
-        <p id="form-status" class="error-msg"></p>
-      </div>
-    </div>
-  </div>
-</form>
+                                <div class="col-md-12">
+                                    <div class="submit-button">
+                                        <button type="submit" id="submit-btn"
+                                            >Submit the Form</button
+                                        >
+                                        <p id="form-status" class="error-msg">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
 
                         <style>
                             .error-text {
@@ -118,77 +141,7 @@ const voteImage = contactData?.contactVoteImage?.node;
     </div>
 </section>
 
-<script>
-    import emailjs from '@emailjs/browser';
 
-    // IDs verified from your latest dashboard screenshots
-    const PUBLIC_KEY = "anQHxdNzZ5YbFbYiJ";
-    const SERVICE_ID = "service_6mn1qpi";      // Corrected from image_54c0b0.png
-    const OWNER_TEMPLATE_ID = "template_gdjebaa";     // Corrected to "Contact Us" template
-    const AUTOREPLY_TEMPLATE_ID = "template_o1uvef9"; // "Auto-Reply" template
-
-    try {
-        emailjs.init(PUBLIC_KEY);
-    } catch (err) {
-        console.error("EmailJS init error:", err);
-    }
-
-    const form = document.getElementById("contact-form");
-    const submitBtn = document.getElementById("submit-btn");
-
-    function onlyDigits(str) {
-        return (str || "").replace(/\D/g, "");
-    }
-
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        
-        const fullname = form.querySelector("input[name='fullname']").value.trim();
-        const email = form.querySelector("input[name='email']").value.trim();
-        const phone = onlyDigits(form.querySelector("input[name='phone']").value);
-        const zip = form.querySelector("input[name='zip']").value.trim();
-        const message = form.querySelector("textarea[name='message']").value.trim();
-
-        // Data for YOUR notification
-        const ownerParams = { 
-            fullname, 
-            email, 
-            phone, 
-            zip, 
-            message 
-        };
-
-        // Data for the USER'S confirmation
-        const autoreplyParams = { 
-            fullname, 
-            email, 
-            to_email: email, 
-            message 
-        };
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Sending...";
-
-        // 1. Send notification to YOU (himanshu@ogrelogic.com)
-        emailjs.send(SERVICE_ID, OWNER_TEMPLATE_ID, ownerParams)
-            .then(() => {
-                // 2. Send confirmation to the USER
-                return emailjs.send(SERVICE_ID, AUTOREPLY_TEMPLATE_ID, autoreplyParams);
-            })
-            .then(() => {
-                alert("✅ Success! You and the user will both receive emails.");
-                form.reset();
-            })
-            .catch((err) => {
-                console.error("Delivery Error:", err);
-                alert("❌ Delivery failed. Please check your EmailJS dashboard history.");
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Submit the Form";
-            });
-    });
-</script>
 
 <style>
     .form-holders {
@@ -327,3 +280,79 @@ const voteImage = contactData?.contactVoteImage?.node;
         }
     }
 </style>
+
+<script>
+  // Dynamic import for high speed: Only loads EmailJS when needed
+  const loadEmailJS = async () => {
+    const { default: emailjs } = await import('@emailjs/browser');
+    emailjs.init("anQHxdNzZ5YbFbYiJ");
+    return emailjs;
+  };
+
+  const form = document.getElementById("contact-form");
+  const submitBtn = document.getElementById("submit-btn");
+
+  const showError = (id, message, isSuccess = false) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = message;
+    el.style.display = message ? "block" : "none";
+    el.style.color = isSuccess ? "green" : "#ed2121";
+  };
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    // UI Loading State
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
+    
+    // Clear previous errors
+    ["err-fullname", "err-email", "err-phone", "err-zip", "form-status"].forEach(id => showError(id, ""));
+
+    // 1. Efficient Data Capture
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    const phone = data.phone.replace(/\D/g, "");
+
+    // 2. Validation Logic
+    let isValid = true;
+    if (!data.fullname) { showError("err-fullname", "Full name required"); isValid = false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { showError("err-email", "Invalid email"); isValid = false; }
+    if (phone.length < 10) { showError("err-phone", "Invalid phone"); isValid = false; }
+    if (!data.zip) { showError("err-zip", "Zip required"); isValid = false; }
+
+    if (!isValid) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit the Form";
+      return;
+    }
+
+    try {
+      // 3. Lazy Load EmailJS only on click
+      const emailjs = await loadEmailJS();
+
+      const params = {
+        ...data,
+        phone,
+        to_email: data.email,
+        submitted_at: new Date().toLocaleString()
+      };
+
+      // 4. Parallel Performance: Send both emails simultaneously
+      await Promise.all([
+        emailjs.send("service_6mn1qpi", "template_gdjebaa", params),
+        emailjs.send("service_6mn1qpi", "template_o1uvef9", params)
+      ]);
+
+      showError("form-status", "✅ Success! Message sent.", true);
+      form.reset();
+    } catch (err) {
+      console.error("EmailJS Error:", err);
+      showError("form-status", "❌ Failed to send. Try again.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit the Form";
+    }
+  });
+</script>
