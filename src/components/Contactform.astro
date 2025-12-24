@@ -232,6 +232,10 @@ const voteImage = contactData?.contactVoteImage?.node;
     margin: 0 !important;
     padding: 0 !important;
 }
+.submit-button p {
+    font-size: 20px !important;
+    padding-top: 10px !important;
+}
     @media (max-width: 1600px) {
         .form-voteimage {
             max-width: 112px;
@@ -289,77 +293,83 @@ const voteImage = contactData?.contactVoteImage?.node;
 </style>
 
 <script>
-  // Dynamic import for high speed: Only loads EmailJS when needed
-  const loadEmailJS = async () => {
-    const { default: emailjs } = await import('@emailjs/browser');
+  import emailjs from '@emailjs/browser';
+
+  // Use a function so we can re-initialize it easily
+  const initContactForm = () => {
+    const form = document.getElementById("contact-form") as HTMLFormElement;
+    const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+
+    if (!form || !submitBtn) return;
+
+    // Initialize EmailJS with your Public Key
     emailjs.init("anQHxdNzZ5YbFbYiJ");
-    return emailjs;
+
+    const showError = (id: string, message: string, isSuccess = false) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = message;
+      el.style.display = message ? "block" : "none";
+      el.style.color = isSuccess ? "green" : "#ed2121";
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      // UI Loading State
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+      
+      // Clear previous errors
+      ["err-fullname", "err-email", "err-phone", "err-zip", "form-status"].forEach(id => showError(id, ""));
+
+      // 1. Capture Data
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const phone = String(data.phone).replace(/\D/g, "");
+
+      // 2. Validation Logic
+      let isValid = true;
+      if (!data.fullname) { showError("err-fullname", "Full name required"); isValid = false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email as string)) { showError("err-email", "Invalid email"); isValid = false; }
+      if (phone.length < 10) { showError("err-phone", "Invalid phone (min 10 digits)"); isValid = false; }
+      if (!data.zip) { showError("err-zip", "Zip required"); isValid = false; }
+
+      if (!isValid) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit the Form";
+        return;
+      }
+
+      try {
+        const params = {
+          ...data,
+          phone: phone,
+          to_email: data.email,
+          submitted_at: new Date().toLocaleString()
+        };
+
+        // 3. Send via EmailJS
+        await Promise.all([
+          emailjs.send("service_6mn1qpi", "template_gdjebaa", params),
+          emailjs.send("service_6mn1qpi", "template_o1uvef9", params)
+        ]);
+
+        showError("form-status", "✅ Success! Message sent.", true);
+        form.reset();
+      } catch (err) {
+        console.error("EmailJS Error:", err);
+        showError("form-status", "❌ Failed to send. Please try again.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit the Form";
+      }
+    });
   };
 
-  const form = document.getElementById("contact-form");
-  const submitBtn = document.getElementById("submit-btn");
+  // Runs on initial load
+  initContactForm();
 
-  const showError = (id, message, isSuccess = false) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.textContent = message;
-    el.style.display = message ? "block" : "none";
-    el.style.color = isSuccess ? "green" : "#ed2121";
-  };
-
-  form?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    
-    // UI Loading State
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Sending...";
-    
-    // Clear previous errors
-    ["err-fullname", "err-email", "err-phone", "err-zip", "form-status"].forEach(id => showError(id, ""));
-
-    // 1. Efficient Data Capture
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    const phone = data.phone.replace(/\D/g, "");
-
-    // 2. Validation Logic
-    let isValid = true;
-    if (!data.fullname) { showError("err-fullname", "Full name required"); isValid = false; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { showError("err-email", "Invalid email"); isValid = false; }
-    if (phone.length < 10) { showError("err-phone", "Invalid phone"); isValid = false; }
-    if (!data.zip) { showError("err-zip", "Zip required"); isValid = false; }
-
-    if (!isValid) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit the Form";
-      return;
-    }
-
-    try {
-      // 3. Lazy Load EmailJS only on click
-      const emailjs = await loadEmailJS();
-
-      const params = {
-        ...data,
-        phone,
-        to_email: data.email,
-        submitted_at: new Date().toLocaleString()
-      };
-
-      // 4. Parallel Performance: Send both emails simultaneously
-      await Promise.all([
-        emailjs.send("service_6mn1qpi", "template_gdjebaa", params),
-        emailjs.send("service_6mn1qpi", "template_o1uvef9", params)
-      ]);
-
-      showError("form-status", "✅ Success! Message sent.", true);
-      form.reset();
-    } catch (err) {
-      console.error("EmailJS Error:", err);
-      showError("form-status", "❌ Failed to send. Try again.");
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit the Form";
-    }
-  });
+  // Runs after every page navigation (Crucial for Vercel + Astro View Transitions)
+  document.addEventListener('astro:page-load', initContactForm);
 </script>
