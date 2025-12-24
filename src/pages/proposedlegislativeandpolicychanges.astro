@@ -10,12 +10,15 @@ query Proposed {
   page(id: "proposedlegislativeandpolicychanges", idType: URI) {
     title
     seo {
+      focuskw
+      canonical
       fullHead
     }
     featuredImage {
       node {
         mediaItemUrl
         altText
+        fileSize
       }
     }
     proposed {
@@ -25,6 +28,7 @@ query Proposed {
         node {
           mediaItemUrl
           altText
+          fileSize
         }
       }
       issuesWeStandFor {

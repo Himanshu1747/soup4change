@@ -13,39 +13,110 @@ import { queryWordPress } from "../lib/wordpress";
 const HOMEPAGE_QUERY = `
 query homepage {
   page(id: "/", idType: URI) {
-    seo { fullHead }
+    id
+    title
+    seo {
+      canonical
+      cornerstone
+      fullHead
+    }
+    featuredImage {
+      node {
+        mediaItemUrl
+        altText
+        fileSize
+      }
+    }
     homepage {
-      videoBanner { node { mediaItemUrl } }
-      videoMain { node { mediaItemUrl } }
+      videoBanner {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      videoMain {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
       videoText
       congressTitle
       honestPolitician
+      main
       paragraph
-      readmore { url title target }
+      readmore {
+        url
+        title
+        target
+      }
       campaign {
         campaignTitle
         campaignParagraph
-        campaignImage { node { mediaItemUrl altText } }
-        voteImage { node { mediaItemUrl altText } }
+        campaignImage {
+          node {
+            sourceUrl
+            mediaItemUrl
+            altText
+          }
+        }
+        voteImage {
+          node {
+            sourceUrl
+            mediaItemUrl
+            altText
+          }
+        }
       }
       whyTrust
       shelbyTitle
       shelbyPargraph
-      aboutShelbyButton { url title target }
-      donateSupportButton { url title target }
-      shelbyImage { node { mediaItemUrl altText } }
-      shelbyVote { node { mediaItemUrl altText } }
+      aboutShelbyButton {
+        url
+        title
+        target
+      }
+      donateSupportButton {
+        url
+        title
+        target
+      }
+      shelbyImage {
+        node {
+          sourceUrl
+          mediaItemUrl
+          altText
+        }
+      }
+      shelbyVote {
+        node {
+          sourceUrl
+          mediaItemUrl
+          altText
+        }
+      }
       forThePeople
       mainTitle
       pargraphJourny
       journeyDetails {
         journeytitle
-        iconImage { node { mediaItemUrl altText } }
+        iconImage {
+          node {
+            mediaItemUrl
+            altText
+          }
+        }
       }
       deliveringTitle
       deliveringParagraph
       delivering {
-        iconImage { node { mediaItemUrl altText } }
+        iconImage {
+          node {
+            sourceUrl
+            mediaItemUrl
+            altText
+          }
+        }
         fieldName
         fieldParagraph
       }
@@ -67,8 +138,15 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-r
 <!doctype html>
 <html lang="en">
 <head>
-    <BaseHead useYoast={true} />
-    {page?.seo?.fullHead && <Fragment set:html={page.seo.fullHead} />}
+    <!-- <BaseHead useYoast={true} />
+    {page?.seo?.fullHead && <Fragment set:html={page.seo.fullHead} />} -->
+
+    <BaseHead 
+        useYoast={true} 
+        canonical={page?.seo?.canonical} 
+        focuskw={page?.seo?.focuskw} 
+    />
+     {page?.seo?.fullHead && <Fragment set:html={page.seo.fullHead} />}
     
     {videoPoster && <link rel="preload" as="image" href={videoPoster} fetchpriority="high" />}
     {videoUrl && <link rel="preload" as="video" href={videoUrl} crossorigin="anonymous" fetchpriority="high" />}

@@ -10,10 +10,13 @@ query endorsements {
   page(id: "life-experience", idType: URI) {
     title
     seo {
+      focuskw
+      canonical
       fullHead
     }
     featuredImage {
       node {
+        sourceUrl
         mediaItemUrl
         altText
       }
@@ -32,12 +35,14 @@ query endorsements {
         node {
           mediaItemUrl
           altText
+          fileSize
         }
       }
       image2 {
         node {
           mediaItemUrl
           altText
+          fileSize
         }
       }
       educationTitle
@@ -48,6 +53,7 @@ query endorsements {
           node {
             mediaItemUrl
             altText
+            fileSize
           }
         }
       }
@@ -55,6 +61,7 @@ query endorsements {
         node {
           mediaItemUrl
           altText
+          fileSize
         }
       }
       mainTitle
@@ -69,6 +76,7 @@ query endorsements {
     }
   }
 }
+
 `;
 
 const pagedata = await queryWordPress(ENDORSEMENT_QUERY);

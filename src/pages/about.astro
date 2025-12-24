@@ -11,12 +11,15 @@ query aboutpage {
   page(id: "about", idType: URI) {
     title
     seo {
+      focuskw
+      canonical
       fullHead
     }
     featuredImage {
       node {
         mediaItemUrl
         altText
+        fileSize
       }
     }
     shortIntro {
@@ -27,12 +30,14 @@ query aboutpage {
         node {
           mediaItemUrl
           altText
+          fileSize
         }
       }
       voteImage {
         node {
           mediaItemUrl
           altText
+          fileSize
         }
       }
       community
@@ -41,6 +46,7 @@ query aboutpage {
         node {
           mediaItemUrl
           altText
+          fileSize
         }
       }
       politicianHeading
@@ -67,7 +73,11 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
 <!doctype html>
 <html lang="en">
     <head>
-        <BaseHead useYoast={true} />
+        <BaseHead useYoast={true} 
+        
+         canonical={pagedata?.seo?.canonical} 
+        focuskw={pagedata?.seo?.focuskw} 
+        />
         {pagedata?.seo?.fullHead && <Fragment set:html={pagedata.seo.fullHead} />}
         {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" />}
     </head>

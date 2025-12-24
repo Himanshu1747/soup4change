@@ -11,6 +11,8 @@ query contactform {
     title
     id
     seo {
+     focuskw
+      canonical
       fullHead
     }
     featuredImage {
@@ -31,7 +33,10 @@ const heroImage = finaaldata?.featuredImage?.node?.mediaItemUrl;
 <!doctype html>
 <html lang="en">
     <head>
-        <BaseHead useYoast={true} />
+        <BaseHead useYoast={true} 
+         canonical={finaaldata?.seo?.canonical} 
+        focuskw={finaaldata?.seo?.focuskw} 
+        />
         {finaaldata?.seo?.fullHead && <Fragment set:html={finaaldata.seo.fullHead} />}
         {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" />}
     </head>
