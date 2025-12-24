@@ -67,7 +67,11 @@ const voteImage = contactData?.contactVoteImage?.node;
                                             name="fullname"
                                             placeholder="Full Name"
                                         />
-                                        <p id="err-fullname" class="error-msg">
+                                        <p
+                                            id="err-fullname"
+                                            class="error-msg"
+                                            style="display:none; "
+                                        >
                                         </p>
                                     </div>
                                 </div>
@@ -140,8 +144,6 @@ const voteImage = contactData?.contactVoteImage?.node;
         </div>
     </div>
 </section>
-
-
 
 <style>
     .form-holders {
@@ -227,15 +229,15 @@ const voteImage = contactData?.contactVoteImage?.node;
     }
 
     .universa-input p {
-    font-size: 16px !important;
-    line-height:16px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-.submit-button p {
-    font-size: 20px !important;
-    padding-top: 10px !important;
-}
+        font-size: 16px !important;
+        line-height: 16px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .submit-button p {
+        font-size: 20px !important;
+        padding-top: 10px !important;
+    }
     @media (max-width: 1600px) {
         .form-voteimage {
             max-width: 112px;
@@ -294,101 +296,97 @@ const voteImage = contactData?.contactVoteImage?.node;
 
 <script is:inline src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
-<script is:inline src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
 <script is:inline>
-  window.addEventListener('DOMContentLoaded', () => {
-    // 1. Configuration (IDs from your working example)
-    const PUBLIC_KEY = "anQHxdNzZ5YbFbYiJ"; 
-    const SERVICE_ID = "service_6mn1qpi";
-    const OWNER_TEMPLATE_ID = "template_gdjebaa";
-    const AUTOREPLY_TEMPLATE_ID = "template_o1uvef9";
+  (function() {
+    const init = () => {
+      const PUBLIC_KEY = "anQHxdNzZ5YbFbYiJ"; 
+      const SERVICE_ID = "service_6mn1qpi";
+      const OWNER_TEMPLATE_ID = "template_gdjebaa";
+      const AUTOREPLY_TEMPLATE_ID = "template_o1uvef9";
 
-    emailjs.init(PUBLIC_KEY);
+      emailjs.init(PUBLIC_KEY);
 
-    const form = document.getElementById("contact-form");
-    const submitBtn = document.getElementById("submit-btn");
+      const form = document.getElementById("contact-form");
+      const submitBtn = document.getElementById("submit-btn");
 
-    // Logic from your old site: clear errors on typing
-    form.querySelectorAll("input, textarea").forEach((input) => {
-      input.addEventListener("input", () => {
-        const errorEl = document.getElementById("err-" + input.name);
-        if (errorEl) {
-          errorEl.textContent = "";
-          errorEl.style.display = "none";
-        }
-      });
-    });
+      if (!form) return;
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      // 2. Capture Data (Mapping your new names to variables)
-      const fullname = form.querySelector("input[name='fullname']").value.trim();
-      const email = form.querySelector("input[name='email']").value.trim();
-      const phone = form.querySelector("input[name='phone']").value.replace(/\D/g, "");
-      const zip = form.querySelector("input[name='zip']").value.trim();
-      const message = form.querySelector("textarea[name='message']").value.trim();
-
-      // 3. Validation Logic (Taking the "return" idea from your old code)
-      let isValid = true;
-
-      if (!fullname) {
-        showError("err-fullname", "Full name required");
-        isValid = false;
-      }
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showError("err-email", "Valid email required");
-        isValid = false;
-      }
-      if (phone.length < 10) {
-        showError("err-phone", "10-digit phone required");
-        isValid = false;
-      }
-      if (!zip) {
-        showError("err-zip", "Zip required");
-        isValid = false;
-      }
-
-      if (!isValid) return; // This stops the email from sending if validation fails
-
-      // 4. Prepare Parameters (Must match your Template {{tags}})
-      const params = {
-        fullname: fullname,
-        email: email,
-        phone: phone,
-        zip: zip,
-        message: message,
-        submitted_at: new Date().toLocaleString()
+      // Function to show/hide errors directly bypassing CSS classes
+      const updateError = (id, msg, show) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = msg || "";
+        el.style.display = show ? "block" : "none";
+        el.style.visibility = show ? "visible" : "hidden";
+        el.style.opacity = show ? "1" : "0";
       };
 
-      // 5. Sending UI
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Sending...";
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        
+        // Reset all
+        ["err-fullname", "err-email", "err-phone", "err-zip", "form-status"].forEach(id => updateError(id, "", false));
 
-      emailjs.send(SERVICE_ID, OWNER_TEMPLATE_ID, params)
-        .then(() => emailjs.send(SERVICE_ID, AUTOREPLY_TEMPLATE_ID, params))
-        .then(() => {
-          showError("form-status", "✅ Success! Message sent.", true);
-          form.reset();
-        })
-        .catch((err) => {
-          console.error(err);
-          showError("form-status", "❌ Delivery failed. Check EmailJS dashboard.");
-        })
-        .finally(() => {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Submit the Form";
-        });
-    });
+        const fullname = form.querySelector("input[name='fullname']").value.trim();
+        const email = form.querySelector("input[name='email']").value.trim();
+        const phone = form.querySelector("input[name='phone']").value.replace(/\D/g, "");
+        const zip = form.querySelector("input[name='zip']").value.trim();
+        const message = form.querySelector("textarea[name='message']").value.trim();
 
-    function showError(id, msg, isSuccess = false) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.textContent = msg;
-        el.style.display = "block";
-        el.style.color = isSuccess ? "green" : "#ed2121";
-      }
+        let isValid = true;
+
+        if (!fullname) {
+          updateError("err-fullname", "Full name is required", true);
+          isValid = false;
+        }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          updateError("err-email", "Valid email required", true);
+          isValid = false;
+        }
+        if (phone.length < 10) {
+          updateError("err-phone", "10-digit phone required", true);
+          isValid = false;
+        }
+        if (!zip) {
+          updateError("err-zip", "Zip code required", true);
+          isValid = false;
+        }
+
+        if (!isValid) {
+          console.log("Validation Failed");
+          return; 
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending...";
+
+        const params = {
+          fullname, email, phone, zip, message,
+          submitted_at: new Date().toLocaleString()
+        };
+
+        emailjs.send(SERVICE_ID, OWNER_TEMPLATE_ID, params)
+          .then(() => emailjs.send(SERVICE_ID, AUTOREPLY_TEMPLATE_ID, params))
+          .then(() => {
+            updateError("form-status", "✅ Success! Message sent.", true);
+            document.getElementById("form-status").style.color = "green";
+            form.reset();
+          })
+          .catch((err) => {
+            console.error("EmailJS Error:", err);
+            updateError("form-status", "❌ Delivery failed. Try again.", true);
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit the Form";
+          });
+      });
+    };
+
+    if (document.readyState === "complete") {
+      init();
+    } else {
+      window.addEventListener("load", init);
     }
-  });
+  })();
 </script>
