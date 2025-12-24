@@ -42,10 +42,8 @@ const socialImage = typeof image === 'string' ? image : image?.src;
     const originalQuery = window.jQuery;
     window.addEventListener('load', () => {
       if (window.jQuery) {
-        // Disable heavy jQuery animations that cause reflows
         jQuery.fx.off = true; 
-        
-        // Wrap any style changes in requestAnimationFrame
+      
         window.requestAnimationFrame(() => {
            console.log("DOM batch-updated to prevent forced reflow.");
         });
@@ -64,10 +62,3 @@ const socialImage = typeof image === 'string' ? image : image?.src;
   });
 </script>
 
-<style is:global>
-  /* 3. HARDWARE ACCELERATION: Moves work from CPU to GPU */
-  .home-video, .campagain-image, .header {
-    transform: translateZ(0); 
-    will-change: transform, opacity;
-  }
-</style>
