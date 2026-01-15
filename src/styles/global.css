@@ -32,8 +32,11 @@ p {
 p,
 span.placeholder_text {
     font-style: normal;
-    font-weight: 400
+    font-weight:500;
 }
+
+
+
 
 .universal-button,
 .yellow-form section.contactform-sec {
@@ -51,7 +54,9 @@ span.placeholder_text {
 }
 
 body {
-    font-family: Inter, sans-serif
+    /* font-family: Inter, sans-serif */
+    font-family: "Montserrat", sans-serif;
+
 }
 
 .about-shelby .fs-150,
@@ -80,7 +85,8 @@ a {
 }
 
 p {
-    font-size: 26px
+    font-size: 20px;
+    line-height: 30px;
 }
 
 input,
@@ -101,12 +107,12 @@ textarea:focus-visible {
     --color-red: #D51D75;
     --color-1E1E1E: #1E1E1E;
     --color-yellow: #F1B53B;
-    --color-blue: #3F2CBC;
+    --color-blue: #000;
     --color-D2D2D3: #D2D2D3;
     --fs-200: 200px;
     --fs-150: 150px;
-    --fs-80: 80px;
-    --fs-60: 60px;
+    --fs-80: 70px;
+    --fs-60: 55px;
     --fs-30: 30px;
     --fs-20: 20px;
     --fs-40: 40px;
@@ -140,7 +146,7 @@ textarea:focus-visible {
     position: relative;
     color: var(--color-blue);
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 600;
     border-radius: 10px;
     padding: 13px 40px;
     overflow: hidden;
@@ -254,13 +260,13 @@ ul.footer-list li:first-child {
 .about-shelby {
     max-width: 870px;
     width: 100%;
-    margin-top: 8%;
+    margin-top:10%;
     padding-bottom: 30px
 }
 
 .fs-40,
 .fs-50 {
-    font-weight: 700;
+    font-weight: 800;
     padding-bottom: 15px
 }
 
@@ -284,13 +290,13 @@ ul.footer-list li:first-child {
 .fs-60 {
     font-size: var(--fs-60);
     font-style: normal;
-    font-weight: 700
+    font-weight: 800;
 }
 
-.about-shelby p {
+/* .about-shelby p {
     font-size: var(--fs-20);
     line-height: normal
-}
+} */
 
 .allparahere p,
 .contact-emails p,
@@ -301,15 +307,16 @@ ul.footer-list li:first-child {
     line-height: normal
 }
 
-.about-shelby .fs-60 {
+/* .about-shelby .fs-60 {
     margin-bottom: -30px
-}
+} */
 
 img.shelby-vote {
     max-width: 198px;
     right: -8%;
     top: 0;
 }
+
 .shelbymain-imge,
 .yellow-form {
     position: relative;
@@ -340,12 +347,12 @@ section.innserbanner-sec {
 }
 
 .yellow-form .form-holders {
-    background: #8a38F5CC !important;
+    background: var(--color-red) !important;
     color: var(--color-white)
 }
 
 .blue-form section.contactform-sec {
-    background: var(--color-blue);
+    background: var(--color-red);
     color: var(--color-white)
 }
 
@@ -447,9 +454,9 @@ ul.footer-list li a {
         --fs-50: 35px
     }
 
-    .about-shelby .fs-60 {
+    /* .about-shelby .fs-60 {
         margin-bottom: -10px
-    }
+    } */
 
     .universal-button {
         font-size: 16px;
@@ -458,7 +465,7 @@ ul.footer-list li a {
 
     img.shelby-vote {
         max-width: 130px;
-        right:0;
+        right: 0;
     }
 
     .grid-button {
@@ -549,7 +556,7 @@ ul.footer-list li a {
     }
 }
 
-@media(max-width:575px){
+@media(max-width:575px) {
     img.shelby-vote {
         display: none;
     }

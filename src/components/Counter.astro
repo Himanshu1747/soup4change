@@ -8,6 +8,17 @@ query GetAllReachSupports {
       title
       ourReachSupportquery {
         reachValue
+        socialMediaIcon {
+          node {
+            mediaItemUrl
+            altText
+          }
+        }
+        socialMediaLink {
+          url
+          title
+          target
+        }
       }
     }
   }
@@ -15,27 +26,41 @@ query GetAllReachSupports {
 `;
 
 const response = await queryWordPress(CPTQUERY);
+// Use reachItems if you want them reversed, otherwise use rawNodes
 const rawNodes = response?.ourReachSupports?.nodes || [];
-const reachItems = [...rawNodes].reverse(); 
+const reachItems = [...rawNodes].reverse();
+
 ---
 
 <div class="grid-counter">
-    {
-        reachItems.map((item) => (
-            <div class="counter-data">
-                <h6 class="fs-60">
-                    {item.ourReachSupportquery?.reachValue ?? "0"}
-                </h6>
-                <p>{item.title ?? "Information Unavailable"}</p>
-            </div>
-        ))
-    }
+  {
+    reachItems.map((item) => {
+      // Destructure for cleaner access
+      const acf = item.ourReachSupportquery;
+      
+      return (
+        <a 
+          href={acf?.socialMediaLink?.url || "#"} 
+          target={acf?.socialMediaLink?.target || "_self"}
+        >
+          <div class="counter-data">
+            <img
+              src={acf?.socialMediaIcon?.node?.mediaItemUrl || "/placeholder-icon.png"}
+              alt={acf?.socialMediaIcon?.node?.altText || item.title}
+              width="80"
+              class="socialmeddia-icon"
+            />
+            <p>{item.title || "error"}</p>
+          </div>
+        </a>
+      );
+    })
+  }
 </div>
 
 <style>
     .counter-data p {
         color: var(--color-red);
-        font-size: var(--fs-40);
         font-style: normal;
         font-weight: 500;
         line-height: normal;
@@ -59,7 +84,7 @@ const reachItems = [...rawNodes].reverse();
         justify-content: space-between;
         gap: 30px;
         flex-wrap: wrap;
-        max-width: 94%;
+        max-width:70%;
         width: 100%;
         margin: 0 auto;
     }
@@ -67,6 +92,25 @@ const reachItems = [...rawNodes].reverse();
     .counter-data .fs-60 {
         padding-bottom: 10px;
     }
+
+    .socialmeddia-icon {
+    max-width: 70px;
+    margin: 0 auto 20px;
+    
+}
+
+@media(max-width:1600px){
+    .socialmeddia-icon {
+    max-width: 60px;
+    margin: 0 auto 10px;
+}
+}
+@media(max-width:1400px){
+        .socialmeddia-icon {
+        max-width: 50px;
+    }
+}
+
 
     @media (max-width: 1199px) {
         .grid-counter {
@@ -76,5 +120,9 @@ const reachItems = [...rawNodes].reverse();
         .counter-data {
             margin: 0;
         }
+            .socialmeddia-icon{
+        max-width: 40px;
+        margin: 0 auto 10px;
+    }
     }
 </style>
