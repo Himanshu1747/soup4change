@@ -127,6 +127,20 @@ query homepage {
         fieldName
         fieldParagraph
       }
+      shopTitle
+      shopIntro
+      shopimage{
+       node {
+          sourceUrl
+          mediaItemUrl
+          altText
+        }
+      }
+      shopButoonLink{
+          url
+        title
+        target
+      }
     }
   }
 }
@@ -494,6 +508,42 @@ const videoUrl = homePage?.videoMain?.node?.mediaItemUrl || "";
                 </div>
             </div>
         </section>
+        <section class="shopdata-sec">
+            <div class="container">
+                <div class="row gy-3 align-items-center">
+                    <div class="col-md-5">
+                        <div class="image-shopdata">
+                            <img
+                                src={homePage?.shopimage?.node?.mediaItemUrl}
+                                alt="shop image"
+                                width="500"
+                                height="600"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="allabout-merche">
+                            <h3 class="fs-60">
+                                {homePage?.shopTitle || "error"}
+                            </h3>
+                            <div set:html={homePage?.shopIntro || "error"} />
+                            <div class="universal-anchor">
+                                <a
+                                    href={homePage?.shopButoonLink?.url || "#"}
+                                    title={homePage?.shopButtonText || "Shop Now"}
+                                    target={homePage?.shopButoonLink?.target ||
+                                        "_self"}
+                                    class="universal-button"
+                                    >{homePage?.shopButtonText || "Shop Now"}</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <div class="form-datahompage">
             <Contactform />
@@ -508,6 +558,13 @@ const videoUrl = homePage?.videoMain?.node?.mediaItemUrl || "";
                 height: 955px;
                 position: relative;
                 overflow: hidden;
+            }
+            .allabout-merche .universal-anchor {
+                padding-top: 20px;
+            }
+            section.shopdata-sec {
+                padding: 60px 0px;
+                background: #e3e3e3;
             }
             video.home-video {
                 position: absolute;
@@ -775,6 +832,9 @@ const videoUrl = homePage?.videoMain?.node?.mediaItemUrl || "";
             .videodata-title .universal-anchor {
                 padding-top: 30px;
             }
+            .image-shopdata img {
+                border-radius: 10px;
+            }
             @media (max-width: 1600px) {
                 .hombanner-sec {
                     height: 734px;
@@ -886,6 +946,9 @@ const videoUrl = homePage?.videoMain?.node?.mediaItemUrl || "";
                 .socialmeddia-icon {
                     max-width: 40px;
                 }
+                section.shopdata-sec {
+                    padding: 40px 0px;
+                }
             }
             @media (max-width: 1199px) {
                 .honest-politician_holders .fs-80 {
@@ -944,6 +1007,10 @@ const videoUrl = homePage?.videoMain?.node?.mediaItemUrl || "";
                     padding: 20px 0px 30px 0px;
                 }
                 .journy-row {
+                    padding: 30px 0px;
+                }
+
+                section.shopdata-sec {
                     padding: 30px 0px;
                 }
             }

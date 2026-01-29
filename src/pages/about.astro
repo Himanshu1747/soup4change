@@ -73,18 +73,31 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
 <!doctype html>
 <html lang="en">
     <head>
-        <BaseHead useYoast={true} 
-        
-         canonical={pagedata?.seo?.canonical} 
-        focuskw={pagedata?.seo?.focuskw} 
+        <BaseHead
+            useYoast={true}
+            canonical={pagedata?.seo?.canonical}
+            focuskw={pagedata?.seo?.focuskw}
         />
-        {pagedata?.seo?.fullHead && <Fragment set:html={pagedata.seo.fullHead} />}
-        {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" />}
+        {
+            pagedata?.seo?.fullHead && (
+                <Fragment set:html={pagedata.seo.fullHead} />
+            )
+        }
+        {
+            heroImage && (
+                <link
+                    rel="preload"
+                    as="image"
+                    href={heroImage}
+                    fetchpriority="high"
+                />
+            )
+        }
     </head>
-    
+
     <body>
         <Header />
-        
+
         <section class="innserbanner-sec">
             <img
                 src={heroImage || "error"}
@@ -101,6 +114,7 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
         <div class="innercounter">
             <Counter />
         </div>
+   
 
         <section class="whytrustshelby-sec inner-page">
             <div class="container">
@@ -120,7 +134,8 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
                         <div class="col-xl-4">
                             <div class="shelby-image">
                                 <img
-                                    src={intro?.voteImage?.node?.mediaItemUrl || "error"}
+                                    src={intro?.voteImage?.node?.mediaItemUrl ||
+                                        "error"}
                                     alt="vote"
                                     height="247"
                                     width="247"
@@ -129,7 +144,8 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
                                     class="shelby-vote"
                                 />
                                 <img
-                                    src={intro?.shelbyImage?.node?.mediaItemUrl || "error"}
+                                    src={intro?.shelbyImage?.node
+                                        ?.mediaItemUrl || "error"}
                                     alt="Shelby"
                                     width="448"
                                     height="677"
@@ -140,6 +156,13 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
                             </div>
                         </div>
                     </div>
+                         <div class="onlygroup-imagess">
+            <div class="container">
+                <div class="shelby-imageegroup">
+                    <img src="/ss.webp" alt={intro?.politicianHeading || "Politician"} width="1024" height="396" loading="lazy"/>
+                </div>
+            </div>
+        </div>
 
                     <div class="community-holders">
                         <div class="center-datacommunity">
@@ -152,6 +175,7 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
                 </div>
             </div>
         </section>
+        
 
         <section class="honestpoltician-sec">
             <div class="container">
@@ -159,7 +183,8 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
                     <div class="col-lg-5">
                         <div class="main-imagepoltican">
                             <img
-                                src={intro?.politicianImage?.node?.mediaItemUrl || "error"}
+                                src={intro?.politicianImage?.node
+                                    ?.mediaItemUrl || "error"}
                                 alt={intro?.politicianHeading || "Politician"}
                                 width="552"
                                 height="635"
@@ -175,13 +200,18 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
                             </h4>
                             <div set:html={intro?.politicianParagraph || ""} />
                             <div class="universal-anchor">
-                                <a 
-                                    href={intro?.donateSupport?.url || "#"} 
-                                    target={intro?.donateSupport?.target || "_self"} 
-                                    title={intro?.donateSupport?.title || "Donate"} 
+                                <a
+                                    href={intro?.donateSupport?.url || "#"}
+                                    target={intro?.donateSupport?.target ||
+                                        "_self"}
+                                    title={intro?.donateSupport?.title ||
+                                        "Donate"}
                                     class="universal-button"
                                 >
-                                    {intro?.donateSupport?.title || "Donate & Support"}
+                                    {
+                                        intro?.donateSupport?.title ||
+                                            "Donate & Support"
+                                    }
                                 </a>
                             </div>
                         </div>
@@ -196,146 +226,162 @@ const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
         <div class="yellow-form">
             <Contactform />
         </div>
-        
+
         <Footer />
-		<style>
-			section.whytrustshelby-sec.inner-page .shelby-holders {
-				color: initial;
-			}
+        <style>
+            section.whytrustshelby-sec.inner-page .shelby-holders {
+                color: initial;
+            }
 
-			section.whytrustshelby-sec.inner-page .shelby-holders::after {
-				display: none;
-			}
+            section.whytrustshelby-sec.inner-page .shelby-holders::after {
+                display: none;
+            }
 
-			section.whytrustshelby-sec.inner-page .shelby-holders {
-				padding: 0;
-			}
+            section.whytrustshelby-sec.inner-page .shelby-holders {
+                padding: 0;
+            }
 
-			.innercounter {
-				max-width: 1315px;
-				width: 100%;
-				margin: 0 auto;
+            .innercounter {
+                max-width: 1315px;
+                width: 100%;
+                margin: 0 auto;
                 padding-top: 50px;
-				/* padding: 80px 0px; */
-			}
+                /* padding: 80px 0px; */
+            }
 
-			.innercounter .grid-counter {
-				max-width: 100%;
-			}
+            .innercounter .grid-counter {
+                max-width: 100%;
+            }
 
-			.community-holders {
-				padding: 45px 60px;
-				border-radius: 20px;
-				background: var(--color-blue);
-				color: var(--color-white);
-			}
+            .community-holders {
+                padding: 45px 60px;
+                border-radius: 20px;
+                background: var(--color-blue);
+                color: var(--color-white);
+            }
 
-			.center-datacommunity {
-				text-align: center;
-				padding-bottom: 50px;
-			}
+            .center-datacommunity {
+                text-align: center;
+                padding-bottom: 50px;
+            }
 
-			.community-holders ul li {
-				list-style: disc;
-				font-size: var(--fs-20);
-				font-weight: 400;
-				padding-bottom: 5px;
-			}
+            .community-holders ul li {
+                list-style: disc;
+                font-size: var(--fs-20);
+                font-weight: 400;
+                padding-bottom: 5px;
+            }
 
-			.community-holders ul {
-				padding-left: 10px;
-				display: grid;
-				column-gap: 70px;
-				grid-template-columns: repeat(2, minmax(0, 1fr));
-			}
-			.abouthonesty {
-				max-width: 868px;
-				width: 100%;
-				margin: 0 auto;
-			}
+            .community-holders ul {
+                padding-left: 10px;
+                display: grid;
+                column-gap: 70px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .abouthonesty {
+                max-width: 868px;
+                width: 100%;
+                margin: 0 auto;
+            }
 
-			.main-imagepoltican {
-				max-width: 552px;
-				width: 100%;
-				overflow: hidden;
-				margin: 0 auto;
-				border-radius: 20px;
-			}
+            .main-imagepoltican {
+                max-width: 552px;
+                width: 100%;
+                overflow: hidden;
+                margin: 0 auto;
+                border-radius: 20px;
+            }
 
-			.abouthonesty .fs-60 {
-				padding-bottom: 30px;
-			}
+            .abouthonesty .fs-60 {
+                padding-bottom: 30px;
+            }
 
-			.abouthonesty .universal-anchor {
-				padding-top: 50px;
-			}
+            .abouthonesty .universal-anchor {
+                padding-top: 50px;
+            }
 
-			section.honestpoltician-sec {
-				padding-top: 50px;
-			}
+            section.honestpoltician-sec {
+                padding-top: 50px;
+            }
 
-			@media (max-width: 1600px) {
-				.innercounter {
-					padding: 40px 0px;
+            .shelby-imageegroup {
+                max-width: fit-content;
+                margin: 0 auto;
+            }
+
+            .onlygroup-imagess {
+                padding-top: 40px;
+            }
+
+            .shelby-imageegroup img {
+                border-radius: 10px;
+            }
+
+            @media (max-width: 1600px) {
+                .innercounter {
+                    padding: 40px 0px;
                     padding-bottom: 0;
-				}
+                }
 
-				.abouthonesty {
-					max-width: 90%;
-				}
+                .abouthonesty {
+                    max-width: 90%;
+                }
 
-				.abouthonesty .universal-anchor {
-					padding-top: 20px;
-				}
+                .abouthonesty .universal-anchor {
+                    padding-top: 20px;
+                }
 
-				.main-imagepoltican {
-					max-width: 450px;
-				}
+                .main-imagepoltican {
+                    max-width: 450px;
+                }
 
-				section.honestpoltician-sec {
-					padding-top: 20px;
-				}
-			}
+                section.honestpoltician-sec {
+                    padding-top: 20px;
+                }
+            }
 
-			@media (max-width: 1400px) {
-				.abouthonesty .fs-60 {
-					padding-bottom: 15px;
-				}
+            @media (max-width: 1400px) {
+                .abouthonesty .fs-60 {
+                    padding-bottom: 15px;
+                }
 
-				.center-datacommunity {
-					padding-bottom: 30px;
-				}
-			}
+                .center-datacommunity {
+                    padding-bottom: 30px;
+                }
+                .onlygroup-imagess {
+                    padding-top: 30px;
+                }
+            }
 
-			@media (max-width: 1199px) {
-				.community-holders {
-					padding: 30px;
-				}
+            @media (max-width: 1199px) {
+                .community-holders {
+                    padding: 30px;
+                }
 
-				.community-holders ul {
-					column-gap: 30px;
-				}
-			}
+                .community-holders ul {
+                    column-gap: 30px;
+                }
+            }
 
-			@media (max-width: 991px) {
-				.honest-polyician {
-					gap: 30px;
-				}
+            @media (max-width: 991px) {
+                .honest-polyician {
+                    gap: 30px;
+                }
 
-				.abouthonesty {
-					max-width: 100%;
-					text-align: center;
-				}
-			}
+                .abouthonesty {
+                    max-width: 100%;
+                    text-align: center;
+                }
+            }
 
-			@media (max-width: 767px) {
-				.community-holders ul {
-					grid-template-columns: repeat(1, minmax(0, 1fr));
-				}
-				.center-datacommunity {
-					padding-bottom: 10px;
-				}
-			}
-		</style>
+            @media (max-width: 767px) {
+                .community-holders ul {
+                    grid-template-columns: repeat(1, minmax(0, 1fr));
+                }
+                .center-datacommunity {
+                    padding-bottom: 10px;
+                }
+            }
+        </style>
     </body>
 </html>
