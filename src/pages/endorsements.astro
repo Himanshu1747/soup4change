@@ -73,11 +73,16 @@ const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
         </section>
         <section class="greenusa-section">
             <div class="container">
-                <div class="greenusa-holders">
+               <div class="gridlogoendorsmnts">
+                 <div class="greenusa-holders">
                     <a href="https://globalgreens.us/" target="_blank">
                         <img src="/green.png" alt="Green USA Logo" /></a
                     >
                 </div>
+                <div class="aiw-logo">
+                    <img src="/iwlogo.webp" alt="" width="300" height="292" loading="lazy">
+                </div>
+               </div>
             </div>
         </section>
 
@@ -92,13 +97,25 @@ const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
                 padding: 40px 0px;
             }
             .greenusa-holders {
-                max-width: fit-content;
-                margin: 0 auto;
+                max-width:500px;
                 width: 100%;
             }
+            .gridlogoendorsmnts {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row-reverse;
+    gap: 40px;
+}
             @media (max-width: 1199px) {
                 .greenusa-section {
                     padding: 30px 0px;
+                }
+            }
+            @media(max-width:575px){
+                .gridlogoendorsmnts{
+                    flex-direction: column;
+                    gap: 30px;
                 }
             }
         </style>
