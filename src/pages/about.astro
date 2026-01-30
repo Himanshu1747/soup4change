@@ -4,6 +4,7 @@ import Contactform from "../components/Contactform.astro";
 import Counter from "../components/Counter.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import Merchendise from "../components/Merchendise.astro";
 import { queryWordPress } from "../lib/wordpress";
 
 // 1. Fetch About Page Data
@@ -267,9 +268,9 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
         <section class="howshelbygotthis-sec">
             <div class="container">
                 <div class="centerdata-shelbyy">
-                    <h1 class="fs-60 text-red">
+                    <h3 class="fs-60 text-red">
                         {finalendormsent?.shelbyPoint || ""}
-                    </h1>
+                    </h3>
                     <div set:html={finalendormsent?.shelbyParagraph || ""} />
                 </div>
 
@@ -290,9 +291,9 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                 <div class="row shelby-row">
                     <div class="col-lg-6">
                         <div class="hey-everyone">
-                            <h2 class="fs-60 text-blue">
+                            <!-- <h2 class="fs-60 text-blue">
                                 {finalendormsent?.heyEveryone || ""}
-                            </h2>
+                            </h2> -->
                             <div
                                 set:html={finalendormsent?.everyoneParagraph ||
                                     ""}
@@ -382,19 +383,17 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                                 src={finalendormsent?.mainImage?.node
                                     ?.mediaItemUrl || "/placeholder.jpg"}
                                 alt={finalendormsent?.mainTitle || "Experience"}
-                                width="442"
-                                height="708"
                                 loading="lazy"
                             />
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="editing-details">
-                            <h3 class="fs-60">
+                            <!-- <h3 class="fs-60">
                                 {finalendormsent?.mainTitle || ""}
-                            </h3>
+                            </h3> -->
                             <div set:html={finalendormsent?.paragraph || ""} />
-                            <div class="gridbuttonss">
+                            <!-- <div class="gridbuttonss">
                                 {
                                     finalendormsent?.buttonlinks?.map(
                                         (alllinks) => (
@@ -417,12 +416,13 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                                         ),
                                     )
                                 }
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        <Merchendise/>
 
         <div class="yellow-form">
             <Contactform />
@@ -675,6 +675,12 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                 border-radius: 10px;
             }
 
+            .editing-details {
+    max-width: 95%;
+    width: 100%;
+    margin: 0 auto;
+}
+
             @media (max-width: 1600px) {
                 .innercounter {
                     padding: 40px 0px;
@@ -729,9 +735,6 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                     padding-top: 20px;
                 }
 
-                .editing-image {
-                    max-width: 300px;
-                }
 
                 section.education-sec,
                 section.stillediting-sec {

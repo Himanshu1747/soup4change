@@ -4,6 +4,7 @@ import Contactform from "../components/Contactform.astro";
 import Counter from "../components/Counter.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import Merchendise from "../components/Merchendise.astro";
 import { queryWordPress } from "../lib/wordpress";
 
 /**
@@ -508,42 +509,7 @@ const videoUrl = homePage?.videoMain?.node?.mediaItemUrl || "";
                 </div>
             </div>
         </section>
-        <section class="shopdata-sec">
-            <div class="container">
-                <div class="row gy-3 align-items-center">
-                    <div class="col-md-5">
-                        <div class="image-shopdata">
-                            <img
-                                src={homePage?.shopimage?.node?.mediaItemUrl}
-                                alt="shop image"
-                                width="500"
-                                height="600"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        <div class="allabout-merche">
-                            <h3 class="fs-60">
-                                {homePage?.shopTitle || "error"}
-                            </h3>
-                            <div set:html={homePage?.shopIntro || "error"} />
-                            <div class="universal-anchor">
-                                <a
-                                    href={homePage?.shopButoonLink?.url || "#"}
-                                    title={homePage?.shopButtonText || "Shop Now"}
-                                    target={homePage?.shopButoonLink?.target ||
-                                        "_self"}
-                                    class="universal-button"
-                                    >{homePage?.shopButtonText || "Shop Now"}</a
-                                >
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <Merchendise/>
 
         <div class="form-datahompage">
             <Contactform />
