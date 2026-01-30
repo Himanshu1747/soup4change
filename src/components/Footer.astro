@@ -64,21 +64,32 @@ const menuItems = menuRes?.menu?.menuItems?.nodes ?? [];
     <div class="container">
       <div class="grid-footerlogos">
         {
-        logo && (
-          <div class="footer-logo">
+          logo && (
+            <div class="footer-logo">
+              <img
+                src={logo.image_url}
+                alt={logo.image_alt || "Soup4change"}
+                width="367"
+                height="208"
+                loading="lazy"
+              />
+            </div>
+          )
+        }
+        <div class="greenusa-image">
+          <a
+            href="https://globalgreens.us/"
+            target="_blank"
+          >
             <img
-              src={logo.image_url}
-              alt={logo.image_alt || "Soup4change"}
-              width="367"
-              height="208"
+              src="/green.png"
+              alt=""
+              width="400"
+              height="400"
               loading="lazy"
             />
-          </div>
-        )
-      }
-      <div class="greenusa-image">
-        <img src="/green.png" alt="" width="400" height="400" loading="lazy" />
-      </div>
+          </a>
+        </div>
       </div>
 
       <ul class="footer-list">
@@ -125,6 +136,7 @@ const menuItems = menuRes?.menu?.menuItems?.nodes ?? [];
     color: var(--color-white);
     padding: 25px 0px;
   }
+  
 
   .footer-logo {
     max-width: 365px;
@@ -204,7 +216,7 @@ const menuItems = menuRes?.menu?.menuItems?.nodes ?? [];
     justify-self: center;
     gap: 30px;
     padding-bottom: 30px;
-}
+  }
 
   @media (max-width: 1600px) {
     .footer-logo {
@@ -224,11 +236,11 @@ const menuItems = menuRes?.menu?.menuItems?.nodes ?? [];
       gap: 20px;
     }
   }
-  @media(max-width:767px){
-    .grid-footerlogos{
-    gap: 20px;
-    flex-direction: column;
-    padding-bottom: 30px;
-}
+  @media (max-width: 767px) {
+    .grid-footerlogos {
+      gap: 20px;
+      flex-direction: column;
+      padding-bottom: 30px;
+    }
   }
 </style>

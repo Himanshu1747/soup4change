@@ -398,6 +398,9 @@ img.detsil-icon {
 ul.footer-list li a {
     text-transform: capitalize
 }
+.contact-emails.congress img {
+    max-width: 120px;
+}
 
 @media(min-width:1600px) {
     .container {
