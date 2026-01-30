@@ -97,7 +97,7 @@ const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
 
     <body>
         <Header />
-        <!-- <section class="innserbanner-sec">
+        <section class="innserbanner-sec">
             <img
                 src={heroImage || "error"}
                 alt={finaldata?.featuredImage?.node?.altText || "Life Experience"}
@@ -108,7 +108,7 @@ const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
                 fetchpriority="high"
                 decoding="sync"
             />
-        </section> -->
+        </section>
 
         <section class="howshelbygotthis-sec">
             <div class="container">
@@ -243,9 +243,9 @@ const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
             </div>
         </section>
 
-        <!-- <div class="blue-form">
+        <div class="blue-form">
             <Contactform />
-        </div> -->
+        </div>
 
         <Footer />
             <style>
@@ -268,7 +268,7 @@ const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
                 font-size: var(--fs-20);
                 font-style: normal;
                 font-weight: 500;
-                 line-height: 145%;
+                line-height: normal;
             }
 
             .hey-everyone .universal-anchor {

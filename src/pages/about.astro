@@ -136,15 +136,21 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
             canonical={pagedata?.seo?.canonical}
             focuskw={pagedata?.seo?.focuskw}
         />
-        {pagedata?.seo?.fullHead && <Fragment set:html={pagedata.seo.fullHead} />}
-        {heroImage && (
-            <link
-                rel="preload"
-                as="image"
-                href={heroImage}
-                fetchpriority="high"
-            />
-        )}
+        {
+            pagedata?.seo?.fullHead && (
+                <Fragment set:html={pagedata.seo.fullHead} />
+            )
+        }
+        {
+            heroImage && (
+                <link
+                    rel="preload"
+                    as="image"
+                    href={heroImage}
+                    fetchpriority="high"
+                />
+            )
+        }
     </head>
 
     <body>
@@ -173,8 +179,12 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                     <div class="row">
                         <div class="col-xl-8">
                             <div class="about-shelby">
-                                <h6 class="fs-60 text-blue">{intro?.whyTrust || ""}</h6>
-                                <h1 class="fs-150 text-blue">{intro?.shelby || ""}</h1>
+                                <h6 class="fs-60 text-blue">
+                                    {intro?.whyTrust || ""}
+                                </h6>
+                                <h1 class="fs-150 text-blue">
+                                    {intro?.shelby || ""}
+                                </h1>
                                 <div set:html={intro?.aboutShelby || ""} />
                             </div>
                         </div>
@@ -189,21 +199,14 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                                     class="shelby-vote"
                                 /> -->
                                 <img
-                                    src={intro?.shelbyImage?.node?.mediaItemUrl || "/placeholder.jpg"}
+                                    src={intro?.shelbyImage?.node
+                                        ?.mediaItemUrl || "/placeholder.jpg"}
                                     alt="Shelby"
                                     width="448"
                                     height="677"
                                     loading="lazy"
                                     class="shelbymain-imge"
                                 />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="onlygroup-imagess">
-                        <div class="container">
-                            <div class="shelby-imageegroup">
-                                <img src="/ss.webp" alt="Politician Group" width="1024" height="396" loading="lazy"/>
                             </div>
                         </div>
                     </div>
@@ -224,7 +227,8 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                     <div class="col-lg-5">
                         <div class="main-imagepoltican">
                             <img
-                                src={intro?.politicianImage?.node?.mediaItemUrl || "/placeholder.jpg"}
+                                src={intro?.politicianImage?.node
+                                    ?.mediaItemUrl || "/placeholder.jpg"}
                                 alt={intro?.politicianHeading || "Politician"}
                                 width="552"
                                 height="635"
@@ -234,15 +238,21 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                     </div>
                     <div class="col-lg-7">
                         <div class="abouthonesty">
-                            <h4 class="fs-60 text-red">{intro?.politicianHeading || ""}</h4>
+                            <h4 class="fs-60 text-red">
+                                {intro?.politicianHeading || ""}
+                            </h4>
                             <div set:html={intro?.politicianParagraph || ""} />
                             <div class="universal-anchor">
                                 <a
                                     href={intro?.donateSupport?.url || "#"}
-                                    target={intro?.donateSupport?.target || "_self"}
+                                    target={intro?.donateSupport?.target ||
+                                        "_self"}
                                     class="universal-button"
                                 >
-                                    {intro?.donateSupport?.title || "Donate & Support"}
+                                    {
+                                        intro?.donateSupport?.title ||
+                                            "Donate & Support"
+                                    }
                                 </a>
                             </div>
                         </div>
@@ -254,25 +264,51 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
             </div>
         </section>
 
-        <section class="howshelbygotthis-sec pt-4">
+        <section class="howshelbygotthis-sec">
             <div class="container">
                 <div class="centerdata-shelbyy">
-                    <h1 class="fs-60 text-red">{finalendormsent?.shelbyPoint || ""}</h1>
+                    <h1 class="fs-60 text-red">
+                        {finalendormsent?.shelbyPoint || ""}
+                    </h1>
                     <div set:html={finalendormsent?.shelbyParagraph || ""} />
+                </div>
+
+                <div class="onlygroup-imagess">
+                    <div class="container">
+                        <div class="shelby-imageegroup">
+                            <img
+                                src="/ss.webp"
+                                alt="Politician Group"
+                                width="1024"
+                                height="396"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row shelby-row">
                     <div class="col-lg-6">
                         <div class="hey-everyone">
-                            <h2 class="fs-60 text-blue">{finalendormsent?.heyEveryone || ""}</h2>
-                            <div set:html={finalendormsent?.everyoneParagraph || ""} />
+                            <h2 class="fs-60 text-blue">
+                                {finalendormsent?.heyEveryone || ""}
+                            </h2>
+                            <div
+                                set:html={finalendormsent?.everyoneParagraph ||
+                                    ""}
+                            />
                             <div class="universal-anchor">
                                 <a
-                                    href={finalendormsent?.donateSupport?.url || "#"}
-                                    target={finalendormsent?.donateSupport?.target || "_self"}
+                                    href={finalendormsent?.donateSupport?.url ||
+                                        "#"}
+                                    target={finalendormsent?.donateSupport
+                                        ?.target || "_self"}
                                     class="universal-button"
                                 >
-                                    {finalendormsent?.donateSupport?.title || "Donate & Support"}
+                                    {
+                                        finalendormsent?.donateSupport?.title ||
+                                            "Donate & Support"
+                                    }
                                 </a>
                             </div>
                         </div>
@@ -280,16 +316,22 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                     <div class="col-lg-6">
                         <div class="image-view">
                             <img
-                                src={finalendormsent?.image1?.node?.mediaItemUrl || "/placeholder.jpg"}
+                                src={finalendormsent?.image1?.node
+                                    ?.mediaItemUrl || "/placeholder.jpg"}
                                 alt="Experience 1"
                                 class="first-image"
-                                width="425" height="319" loading="lazy"
+                                width="425"
+                                height="319"
+                                loading="lazy"
                             />
                             <img
-                                src={finalendormsent?.image2?.node?.mediaItemUrl || "/placeholder.jpg"}
+                                src={finalendormsent?.image2?.node
+                                    ?.mediaItemUrl || "/placeholder.jpg"}
                                 alt="Experience 2"
                                 class="second-image"
-                                width="355" height="399" loading="lazy"
+                                width="355"
+                                height="399"
+                                loading="lazy"
                             />
                         </div>
                     </div>
@@ -300,22 +342,33 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
         <section class="education-sec">
             <div class="container">
                 <div class="center-eductaion">
-                    <h2 class="fs-60 text-blue">{finalendormsent?.educationTitle || ""}</h2>
+                    <h2 class="fs-60 text-blue">
+                        {finalendormsent?.educationTitle || ""}
+                    </h2>
                 </div>
                 <div class="grid-education">
-                    {finalendormsent?.eductaionField?.map((allfields) => (
-                        <div class="highscholl-holders">
-                            <div class="inside-dataa">
-                                <img
-                                    src={allfields?.iconImage?.node?.mediaItemUrl || "/icon.png"}
-                                    alt={allfields?.fieldType || "Icon"}
-                                    height="48" width="48" loading="lazy"
-                                />
-                                <h4 class="fs-30">{allfields?.fieldType || ""}</h4>
-                                <p>{allfields?.fieldParagraph || ""}</p>
+                    {
+                        finalendormsent?.eductaionField?.map((allfields) => (
+                            <div class="highscholl-holders">
+                                <div class="inside-dataa">
+                                    <img
+                                        src={
+                                            allfields?.iconImage?.node
+                                                ?.mediaItemUrl || "/icon.png"
+                                        }
+                                        alt={allfields?.fieldType || "Icon"}
+                                        height="48"
+                                        width="48"
+                                        loading="lazy"
+                                    />
+                                    <h4 class="fs-30">
+                                        {allfields?.fieldType || ""}
+                                    </h4>
+                                    <p>{allfields?.fieldParagraph || ""}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    }
                 </div>
             </div>
         </section>
@@ -326,28 +379,44 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                     <div class="col-lg-6">
                         <div class="editing-image">
                             <img
-                                src={finalendormsent?.mainImage?.node?.mediaItemUrl || "/placeholder.jpg"}
+                                src={finalendormsent?.mainImage?.node
+                                    ?.mediaItemUrl || "/placeholder.jpg"}
                                 alt={finalendormsent?.mainTitle || "Experience"}
-                                width="442" height="708" loading="lazy"
+                                width="442"
+                                height="708"
+                                loading="lazy"
                             />
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="editing-details">
-                            <h3 class="fs-60">{finalendormsent?.mainTitle || ""}</h3>
+                            <h3 class="fs-60">
+                                {finalendormsent?.mainTitle || ""}
+                            </h3>
                             <div set:html={finalendormsent?.paragraph || ""} />
                             <div class="gridbuttonss">
-                                {finalendormsent?.buttonlinks?.map((alllinks) => (
-                                    <div class="universal-anchor">
-                                        <a
-                                            href={alllinks?.buttonLinks?.url || "#"}
-                                            target={alllinks?.buttonLinks?.target || "_self"}
-                                            class="universal-button"
-                                        >
-                                            {alllinks?.buttonLinks?.title || "Click Here"}
-                                        </a>
-                                    </div>
-                                ))}
+                                {
+                                    finalendormsent?.buttonlinks?.map(
+                                        (alllinks) => (
+                                            <div class="universal-anchor">
+                                                <a
+                                                    href={
+                                                        alllinks?.buttonLinks
+                                                            ?.url || "#"
+                                                    }
+                                                    target={
+                                                        alllinks?.buttonLinks
+                                                            ?.target || "_self"
+                                                    }
+                                                    class="universal-button"
+                                                >
+                                                    {alllinks?.buttonLinks
+                                                        ?.title || "Click Here"}
+                                                </a>
+                                            </div>
+                                        ),
+                                    )
+                                }
                             </div>
                         </div>
                     </div>
@@ -390,6 +459,7 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                 border-radius: 20px;
                 background: var(--color-blue);
                 color: var(--color-white);
+                margin-top: 50px;
             }
 
             .center-datacommunity {
@@ -442,87 +512,17 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
             }
 
             .onlygroup-imagess {
-                padding-top: 40px;
+                padding: 40px 0px 70px 0px;
             }
 
             .shelby-imageegroup img {
                 border-radius: 10px;
             }
-
-            @media (max-width: 1600px) {
-                .innercounter {
-                    padding: 40px 0px;
-                    padding-bottom: 0;
-                }
-
-                .abouthonesty {
-                    max-width: 90%;
-                }
-
-                .abouthonesty .universal-anchor {
-                    padding-top: 20px;
-                }
-
-                .main-imagepoltican {
-                    max-width: 450px;
-                }
-
-                section.honestpoltician-sec {
-                    padding-top: 20px;
-                }
-            }
-
-            @media (max-width: 1400px) {
-                .abouthonesty .fs-60 {
-                    padding-bottom: 15px;
-                }
-
-                .center-datacommunity {
-                    padding-bottom: 30px;
-                }
-                .onlygroup-imagess {
-                    padding-top: 30px;
-                }
-            }
-
-            @media (max-width: 1199px) {
-                .community-holders {
-                    padding: 30px;
-                }
-
-                .community-holders ul {
-                    column-gap: 30px;
-                }
-            }
-
-            @media (max-width: 991px) {
-                .honest-polyician {
-                    gap: 30px;
-                }
-
-                .abouthonesty {
-                    max-width: 100%;
-                    text-align: center;
-                }
-            }
-
-            @media (max-width: 767px) {
-                .community-holders ul {
-                    grid-template-columns: repeat(1, minmax(0, 1fr));
-                }
-                .center-datacommunity {
-                    padding-bottom: 10px;
-                }
-            }
-        </style>
-
-            <style>
             .centerdata-shelbyy {
                 max-width: 895px;
                 width: 100%;
                 margin: 0 auto;
                 text-align: center;
-                padding-top: 40px;
             }
             .centerdata-shelbyy .fs-60,
             .hey-everyone .fs-60 {
@@ -537,7 +537,7 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                 font-size: var(--fs-20);
                 font-style: normal;
                 font-weight: 500;
-                 line-height: 145%;
+                line-height: 145%;
             }
 
             .hey-everyone .universal-anchor {
@@ -572,10 +572,6 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
 
             section.howshelbygotthis-sec {
                 padding: 60px 0px;
-            }
-
-            .centerdata-shelbyy {
-                padding-bottom: 135px;
             }
 
             section.education-sec {
@@ -668,19 +664,37 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                 padding-bottom: 20px;
             }
 
-           .editing-details p {
+            .editing-details p {
                 color: var(--color-blue) !important;
             }
 
             section.stillediting-sec {
                 padding: 85px 0px;
             }
-
-            
+            .shelby-image img {
+                border-radius: 10px;
+            }
 
             @media (max-width: 1600px) {
-                .centerdata-shelbyy {
-                    padding-bottom: 70px;
+                .innercounter {
+                    padding: 40px 0px;
+                    padding-bottom: 0;
+                }
+
+                .abouthonesty {
+                    max-width: 90%;
+                }
+
+                .abouthonesty .universal-anchor {
+                    padding-top: 20px;
+                }
+
+                .main-imagepoltican {
+                    max-width: 450px;
+                }
+
+                section.honestpoltician-sec {
+                    padding-top: 20px;
                 }
                 .highscholl-holders {
                     min-height: auto;
@@ -697,10 +711,16 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
             }
 
             @media (max-width: 1400px) {
-                .centerdata-shelbyy {
-                    padding-bottom: 40px;
+                .abouthonesty .fs-60 {
+                    padding-bottom: 15px;
                 }
 
+                .center-datacommunity {
+                    padding-bottom: 30px;
+                }
+                .onlygroup-imagess {
+                    padding-top: 30px;
+                }
                 section.howshelbygotthis-sec {
                     padding: 40px 0px;
                 }
@@ -717,9 +737,20 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                 section.stillediting-sec {
                     padding: 40px 0px;
                 }
+
+                .community-holders {
+                    margin-top: 30px;
+                }
             }
 
             @media (max-width: 1199px) {
+                .community-holders {
+                    padding: 30px;
+                }
+
+                .community-holders ul {
+                    column-gap: 30px;
+                }
                 .grid-education {
                     gap: 30px;
                 }
@@ -727,15 +758,22 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                 .center-eductaion {
                     padding-bottom: 30px;
                 }
+                .onlygroup-imagess {
+                    padding: 30px 0px 30px 0px;
+                }
             }
 
             @media (max-width: 991px) {
-                .hey-everyone {
-                    max-width: 100%;
-                    padding-bottom: 30px;
+                .honest-polyician {
+                    gap: 30px;
                 }
 
-                .centerdata-shelbyy {
+                .abouthonesty {
+                    max-width: 100%;
+                    text-align: center;
+                }
+                .hey-everyone {
+                    max-width: 100%;
                     padding-bottom: 30px;
                 }
 
@@ -756,16 +794,18 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                     justify-content: center;
                 }
             }
-            @media (max-width: 767px) {
-                .centerdata-shelbyy {
-                    padding-bottom: 20px;
-                }
 
+            @media (max-width: 767px) {
+                .community-holders ul {
+                    grid-template-columns: repeat(1, minmax(0, 1fr));
+                }
+                .center-datacommunity {
+                    padding-bottom: 10px;
+                }
                 img.education-icon {
                     margin: 0 auto 15px;
                 }
             }
-
             @media (max-width: 575px) {
                 .grid-education {
                     grid-template-columns: repeat(1, minmax(0, 1fr));
