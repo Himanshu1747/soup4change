@@ -228,8 +228,7 @@ span.placeholder_text {
     color: var(--color-red)
 }
 
-.universal-button.red-text::before,
-ul.footer-list li:first-child {
+.universal-button.red-text::before{
     display: none
 }
 
