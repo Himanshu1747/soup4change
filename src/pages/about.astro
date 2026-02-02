@@ -9,7 +9,7 @@ import { queryWordPress } from "../lib/wordpress";
 
 // 1. Fetch Page Data
 const ABOUT_QUERY = `
-query aboutpage {
+query AboutPage {
   page(id: "about", idType: URI) {
     title
     seo {
@@ -23,11 +23,23 @@ query aboutpage {
         altText
       }
     }
-    shortIntro {
+    aboutpage {
       whyTrust
       shelby
       aboutShelby
       shortIntro
+      childImageFirst {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      childImageSecond {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
       community
       communityList
       politicianHeading
@@ -59,19 +71,7 @@ query aboutpage {
           altText
         }
       }
-      # FIXED: Added childImage1 and childImage2 to the query
-      childImage1 {
-        node {
-          mediaItemUrl
-          altText
-        }
-      }
-      childImage2 {
-        node {
-          mediaItemUrl
-          altText
-        }
-      }
+ 
       donateSupport {
         url
         title
@@ -104,7 +104,7 @@ const aboutResponse = await queryWordPress(ABOUT_QUERY);
 
 // Assign Data Safely
 const pagedata = aboutResponse?.page;
-const intro = pagedata?.shortIntro;
+const intro = pagedata?.aboutpage;
 const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
 
 // Ensure Education mapping matches the GraphQL response
@@ -115,12 +115,12 @@ const educationList = intro?.educationDetails || [];
 <html lang="en">
     <head>
         <BaseHead
-    title={pagedata?.title} 
-    description={intro?.shortIntro}
-    useYoast={true}
-    canonical={pagedata?.seo?.canonical}
-    focuskw={pagedata?.seo?.focuskw}
-/>
+            title={pagedata?.title}
+            description={intro?.shortIntro}
+            useYoast={true}
+            canonical={pagedata?.seo?.canonical}
+            focuskw={pagedata?.seo?.focuskw}
+        />
         {
             pagedata?.seo?.fullHead && (
                 <Fragment set:html={pagedata.seo.fullHead} />
@@ -278,7 +278,7 @@ const educationList = intro?.educationDetails || [];
                     <div class="col-lg-6">
                         <div class="image-view">
                             <img
-                                src={intro?.childImage1?.node?.mediaItemUrl ||
+                                src={intro?.childImageFirst?.node?.mediaItemUrl ||
                                     "/placeholder.jpg"}
                                 alt={intro?.childImage1?.node?.altText ||
                                     "Experience 1"}
@@ -288,7 +288,7 @@ const educationList = intro?.educationDetails || [];
                                 loading="lazy"
                             />
                             <img
-                                src={intro?.childImage2?.node?.mediaItemUrl ||
+                                src={intro?.childImageSecond?.node?.mediaItemUrl ||
                                     "/placeholder.jpg"}
                                 alt={intro?.childImage2?.node?.altText ||
                                     "Experience 2"}
@@ -627,6 +627,9 @@ const educationList = intro?.educationDetails || [];
                 width: 100%;
                 margin: 0 auto;
             }
+            .shelby-row {
+    align-items: center;
+}
 
             @media (max-width: 1600px) {
                 .innercounter {
