@@ -7,7 +7,7 @@ import Header from "../components/Header.astro";
 import Merchendise from "../components/Merchendise.astro";
 import { queryWordPress } from "../lib/wordpress";
 
-// 1. Fetch About Page Data
+// 1. Fetch Page Data
 const ABOUT_QUERY = `
 query aboutpage {
   page(id: "about", idType: URI) {
@@ -27,6 +27,14 @@ query aboutpage {
       whyTrust
       shelby
       aboutShelby
+      shortIntro
+      community
+      communityList
+      politicianHeading
+      politicianParagraph
+      congressHeading
+      titleGotToThisPoint
+      descriptionToThisPoint
       shelbyImage {
         node {
           mediaItemUrl
@@ -39,104 +47,80 @@ query aboutpage {
           altText
         }
       }
-      community
-      communityList
       politicianImage {
         node {
           mediaItemUrl
           altText
         }
       }
-      politicianHeading
-      politicianParagraph
-      donateSupport {
-        url
-        title
-        target
-      }
-      congressHeading
-    }
-  }
-}
-`;
-
-// 2. Fetch Endorsements Data
-const ENDORSEMENT_QUERY = `
-query endorsements {
-  page(id: "life-experience", idType: URI) {
-    endorsements {
-      shelbyPoint
-      shelbyParagraph
-      heyEveryone
-      everyoneParagraph
-      donateSupport {
-        url
-        title
-        target
-      }
-      image1 {
+      gotToThisPointImage {
         node {
           mediaItemUrl
           altText
         }
       }
-      image2 {
+      # FIXED: Added childImage1 and childImage2 to the query
+      childImage1 {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      childImage2 {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      donateSupport {
+        url
+        title
+        target
+      }
+      lackDescription
+      lackImage {
         node {
           mediaItemUrl
           altText
         }
       }
       educationTitle
-      eductaionField {
-        fieldParagraph
-        fieldType
-        iconImage {
+      educationDetails {
+        educationIcon {
           node {
             mediaItemUrl
             altText
           }
         }
-      }
-      mainImage {
-        node {
-          mediaItemUrl
-          altText
-        }
-      }
-      mainTitle
-      paragraph
-      buttonlinks {
-        buttonLinks {
-          url
-          title
-          target
-        }
+        titleEducations
+        educationShortIntro
       }
     }
   }
 }
 `;
 
-// Execute Queries with unique variable names
 const aboutResponse = await queryWordPress(ABOUT_QUERY);
-const endorsementResponse = await queryWordPress(ENDORSEMENT_QUERY);
 
 // Assign Data Safely
 const pagedata = aboutResponse?.page;
 const intro = pagedata?.shortIntro;
 const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
 
-const finalendormsent = endorsementResponse?.page?.endorsements;
+// Ensure Education mapping matches the GraphQL response
+const educationList = intro?.educationDetails || [];
 ---
 
 <!doctype html>
 <html lang="en">
     <head>
         <BaseHead
-            useYoast={true}
-            canonical={pagedata?.seo?.canonical}
-            focuskw={pagedata?.seo?.focuskw}
-        />
+    title={pagedata?.title} 
+    description={intro?.shortIntro}
+    useYoast={true}
+    canonical={pagedata?.seo?.canonical}
+    focuskw={pagedata?.seo?.focuskw}
+/>
         {
             pagedata?.seo?.fullHead && (
                 <Fragment set:html={pagedata.seo.fullHead} />
@@ -160,7 +144,7 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
         <section class="innserbanner-sec">
             <img
                 src={heroImage || "/placeholder.jpg"}
-                alt={pagedata?.featuredImage?.node?.altText || "About Shelby"}
+                alt={pagedata?.featuredImage?.node?.altText || "error"}
                 width="1920"
                 height="707"
                 class="innerbanner-image"
@@ -169,10 +153,6 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                 loading="eager"
             />
         </section>
-
-        <!-- <div class="innercounter">
-            <Counter />
-        </div> -->
 
         <section class="whytrustshelby-sec inner-page">
             <div class="container">
@@ -191,17 +171,9 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                         </div>
                         <div class="col-xl-4">
                             <div class="shelby-image">
-                                <!-- <img
-                                    src={intro?.voteImage?.node?.mediaItemUrl || "/placeholder.jpg"}
-                                    alt="vote"
-                                    height="247"
-                                    width="247"
-                                    loading="lazy"
-                                    class="shelby-vote"
-                                /> -->
                                 <img
                                     src={intro?.shelbyImage?.node
-                                        ?.mediaItemUrl || "/placeholder.jpg"}
+                                        ?.mediaItemUrl || "error"}
                                     alt="Shelby"
                                     width="448"
                                     height="677"
@@ -211,7 +183,6 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                             </div>
                         </div>
                     </div>
-
                     <div class="community-holders">
                         <div class="center-datacommunity">
                             <h2 class="fs-30">{intro?.community || ""}</h2>
@@ -229,8 +200,8 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                         <div class="main-imagepoltican">
                             <img
                                 src={intro?.politicianImage?.node
-                                    ?.mediaItemUrl || "/placeholder.jpg"}
-                                alt={intro?.politicianHeading || "Politician"}
+                                    ?.mediaItemUrl || "error"}
+                                alt={intro?.politicianHeading || "error"}
                                 width="552"
                                 height="635"
                                 loading="lazy"
@@ -259,9 +230,6 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                         </div>
                     </div>
                 </div>
-                <!-- <h6 class="fs-200 overlap-heading text-center">
-                    {intro?.congressHeading || ""}
-                </h6> -->
             </div>
         </section>
 
@@ -269,17 +237,18 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
             <div class="container">
                 <div class="centerdata-shelbyy">
                     <h3 class="fs-60 text-red">
-                        {finalendormsent?.shelbyPoint || ""}
+                        {intro?.titleGotToThisPoint || ""}
                     </h3>
-                    <div set:html={finalendormsent?.shelbyParagraph || ""} />
+                    <div set:html={intro?.descriptionToThisPoint || ""} />
                 </div>
 
                 <div class="onlygroup-imagess">
                     <div class="container">
                         <div class="shelby-imageegroup">
                             <img
-                                src="/ss.webp"
-                                alt="Politician Group"
+                                src={intro?.gotToThisPointImage?.node
+                                    ?.mediaItemUrl || "error"}
+                                alt="Group Image"
                                 width="1024"
                                 height="396"
                                 loading="lazy"
@@ -287,27 +256,19 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                         </div>
                     </div>
                 </div>
-
                 <div class="row shelby-row">
                     <div class="col-lg-6">
                         <div class="hey-everyone">
-                            <!-- <h2 class="fs-60 text-blue">
-                                {finalendormsent?.heyEveryone || ""}
-                            </h2> -->
-                            <div
-                                set:html={finalendormsent?.everyoneParagraph ||
-                                    ""}
-                            />
+                            <div set:html={intro?.shortIntro || ""} />
                             <div class="universal-anchor">
                                 <a
-                                    href={finalendormsent?.donateSupport?.url ||
-                                        "#"}
-                                    target={finalendormsent?.donateSupport
-                                        ?.target || "_self"}
+                                    href={intro?.donateSupport?.url || "#"}
+                                    target={intro?.donateSupport?.target ||
+                                        "_self"}
                                     class="universal-button"
                                 >
                                     {
-                                        finalendormsent?.donateSupport?.title ||
+                                        intro?.donateSupport?.title ||
                                             "Donate & Support"
                                     }
                                 </a>
@@ -317,18 +278,20 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                     <div class="col-lg-6">
                         <div class="image-view">
                             <img
-                                src={finalendormsent?.image1?.node
-                                    ?.mediaItemUrl || "/placeholder.jpg"}
-                                alt="Experience 1"
+                                src={intro?.childImage1?.node?.mediaItemUrl ||
+                                    "/placeholder.jpg"}
+                                alt={intro?.childImage1?.node?.altText ||
+                                    "Experience 1"}
                                 class="first-image"
                                 width="425"
                                 height="319"
                                 loading="lazy"
                             />
                             <img
-                                src={finalendormsent?.image2?.node
-                                    ?.mediaItemUrl || "/placeholder.jpg"}
-                                alt="Experience 2"
+                                src={intro?.childImage2?.node?.mediaItemUrl ||
+                                    "/placeholder.jpg"}
+                                alt={intro?.childImage2?.node?.altText ||
+                                    "Experience 2"}
                                 class="second-image"
                                 width="355"
                                 height="399"
@@ -340,49 +303,15 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
             </div>
         </section>
 
-        <section class="education-sec">
-            <div class="container">
-                <div class="center-eductaion">
-                    <h2 class="fs-60 text-blue">
-                        {finalendormsent?.educationTitle || ""}
-                    </h2>
-                </div>
-                <div class="grid-education">
-                    {
-                        finalendormsent?.eductaionField?.map((allfields) => (
-                            <div class="highscholl-holders">
-                                <div class="inside-dataa">
-                                    <img
-                                        src={
-                                            allfields?.iconImage?.node
-                                                ?.mediaItemUrl || "/icon.png"
-                                        }
-                                        alt={allfields?.fieldType || "Icon"}
-                                        height="48"
-                                        width="48"
-                                        loading="lazy"
-                                    />
-                                    <h4 class="fs-30">
-                                        {allfields?.fieldType || ""}
-                                    </h4>
-                                    <p>{allfields?.fieldParagraph || ""}</p>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-        </section>
-
         <section class="stillediting-sec">
             <div class="container">
                 <div class="row align-items-center row-editing">
                     <div class="col-lg-6">
                         <div class="editing-image">
                             <img
-                                src={finalendormsent?.mainImage?.node
-                                    ?.mediaItemUrl || "/placeholder.jpg"}
-                                alt={finalendormsent?.mainTitle || "Experience"}
+                                src={intro?.lackImage?.node?.mediaItemUrl ||
+                                    "error"}
+                                alt=" Still Editing These"
                                 loading="lazy"
                             />
                         </div>
@@ -392,37 +321,52 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                             <!-- <h3 class="fs-60">
                                 {finalendormsent?.mainTitle || ""}
                             </h3> -->
-                            <div set:html={finalendormsent?.paragraph || ""} />
-                            <!-- <div class="gridbuttonss">
-                                {
-                                    finalendormsent?.buttonlinks?.map(
-                                        (alllinks) => (
-                                            <div class="universal-anchor">
-                                                <a
-                                                    href={
-                                                        alllinks?.buttonLinks
-                                                            ?.url || "#"
-                                                    }
-                                                    target={
-                                                        alllinks?.buttonLinks
-                                                            ?.target || "_self"
-                                                    }
-                                                    class="universal-button"
-                                                >
-                                                    {alllinks?.buttonLinks
-                                                        ?.title || "Click Here"}
-                                                </a>
-                                            </div>
-                                        ),
-                                    )
-                                }
-                            </div> -->
+                            <div set:html={intro?.lackDescription || ""} />
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <Merchendise/>
+
+        <section class="education-sec">
+            <div class="container">
+                <div class="center-eductaion">
+                    <h2 class="fs-60 text-blue">
+                        {intro?.educationTitle || ""}
+                    </h2>
+                </div>
+                <div class="grid-education">
+                    {
+                        educationList.map((item) => (
+                            <div class="highscholl-holders">
+                                <div class="inside-dataa">
+                                    <img
+                                        src={
+                                            item?.educationIcon?.node
+                                                ?.mediaItemUrl || "/icon.png"
+                                        }
+                                        alt={item?.titleEducations || "Icon"}
+                                        height="48"
+                                        width="48"
+                                        loading="lazy"
+                                        class="icon-educstionss"
+                                    />
+                                    <h4 class="fs-30">
+                                        {item?.titleEducations || ""}
+                                    </h4>
+                                    <div
+                                        set:html={
+                                            item?.educationShortIntro || ""
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+        <Merchendise />
 
         <div class="yellow-form">
             <Contactform />
@@ -452,6 +396,9 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
 
             .innercounter .grid-counter {
                 max-width: 100%;
+            }
+            .icon-educstionss {
+                margin-bottom: 15px;
             }
 
             .community-holders {
@@ -676,10 +623,10 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
             }
 
             .editing-details {
-    max-width: 95%;
-    width: 100%;
-    margin: 0 auto;
-}
+                max-width: 95%;
+                width: 100%;
+                margin: 0 auto;
+            }
 
             @media (max-width: 1600px) {
                 .innercounter {
@@ -734,7 +681,6 @@ const finalendormsent = endorsementResponse?.page?.endorsements;
                 .hey-everyone .universal-anchor {
                     padding-top: 20px;
                 }
-
 
                 section.education-sec,
                 section.stillediting-sec {

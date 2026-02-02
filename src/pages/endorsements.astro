@@ -10,8 +10,6 @@ query endorsements {
   page(id: "endorsements", idType: URI) {
     title
     seo {
-      focuskw
-      canonical
       fullHead
     }
     featuredImage {
@@ -21,18 +19,39 @@ query endorsements {
         altText
       }
     }
-    
+    endorsementspage {
+      logoHere {
+        logoImage {
+          node {
+            sourceUrl
+            mediaItemUrl
+            altText
+          }
+        }
+        logoLinks {
+          url
+          title
+          target
+        }
+      }
+    }
   }
 }
-
 `;
 
 const pagedata = await queryWordPress(ENDORSEMENT_QUERY);
 const finaldata = pagedata?.page;
-const finalendormsent = finaldata?.endorsements;
 
-// Performance Cache: Extract the Hero Image URL for the Preload tag
-const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
+// Performance: Extract the Hero Image URL
+// Note: prioritize mediaItemUrl, fallback to sourceUrl
+const heroImage =
+    finaldata?.featuredImage?.node?.mediaItemUrl ||
+    finaldata?.featuredImage?.node?.sourceUrl;
+const heroAlt =
+    finaldata?.featuredImage?.node?.altText || "Endorsements Banner";
+
+// Correcting your data mapping for the logos
+const endorsementsLogos = finaldata?.endorsementspage?.logoHere || [];
 ---
 
 <!doctype html>
@@ -44,8 +63,10 @@ const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
                 <Fragment set:html={finaldata.seo.fullHead} />
             )
         }
+
         {
             heroImage && (
+                /* High Priority Preload for LCP */
                 <link
                     rel="preload"
                     as="image"
@@ -58,31 +79,49 @@ const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
 
     <body>
         <Header />
+
         <section class="innserbanner-sec">
-            <img
-                src={heroImage || "error"}
-                alt={finaldata?.featuredImage?.node?.altText ||
-                    "Life Experience"}
-                width="1920"
-                height="707"
-                class="innerbanner-image"
-                loading="eager"
-                fetchpriority="high"
-                decoding="sync"
-            />
+            {
+                heroImage && (
+                    <img
+                        src={heroImage}
+                        alt={heroAlt}
+                        width="1920"
+                        height="707"
+                        class="innerbanner-image"
+                        loading="eager"
+                        fetchpriority="high"
+                        decoding="sync"
+                    />
+                )
+            }
         </section>
+
         <section class="greenusa-section">
             <div class="container">
-               <div class="gridlogoendorsmnts">
-                 <div class="greenusa-holders">
-                    <a href="https://globalgreens.us/" target="_blank">
-                        <img src="/green.png" alt="Green USA Logo" /></a
-                    >
+                <div class="gridlogoendorsmnts">
+                    {/* Mapping through your dynamic WordPress data */}
+                    {
+                        endorsementsLogos.map((item) => (
+                            <div class="greenusa-holders">
+                                <a
+                                    href={item.logoLinks?.url || "#"}
+                                    target={item.logoLinks?.target || "_self"}
+                                >
+                                    <img
+                                        src={item.logoImage?.node?.sourceUrl}
+                                        alt={
+                                            item.logoImage?.node?.altText ||
+                                            "Partner Logo"
+                                        }
+                                        loading="lazy"
+                                    />
+                                </a>
+                            </div>
+                        ))
+                    }
+
                 </div>
-                <div class="aiw-logo">
-                    <img src="/iwlogo.webp" alt="" width="300" height="292" loading="lazy">
-                </div>
-               </div>
             </div>
         </section>
 
@@ -97,23 +136,24 @@ const heroImage = finaldata?.featuredImage?.node?.mediaItemUrl;
                 padding: 40px 0px;
             }
             .greenusa-holders {
-                max-width:500px;
+                max-width: 400px;
                 width: 100%;
             }
             .gridlogoendorsmnts {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row-reverse;
-    gap: 40px;
-}
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                justify-content: center;
+                flex-direction: row-reverse;
+                gap: 40px;
+            }
             @media (max-width: 1199px) {
                 .greenusa-section {
                     padding: 30px 0px;
                 }
             }
-            @media(max-width:575px){
-                .gridlogoendorsmnts{
+            @media (max-width: 575px) {
+                .gridlogoendorsmnts {
                     flex-direction: column;
                     gap: 30px;
                 }

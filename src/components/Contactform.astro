@@ -1,5 +1,6 @@
 ---
 import { queryWordPress } from "../lib/wordpress";
+import ContactForm from '../components/ContactForm';
 
 const FORM_DATA_QUERY = `
 query contactform {
@@ -39,101 +40,17 @@ const voteImage = contactData?.contactVoteImage?.node;
 
             <div class="col-lg-6">
                 <div class="form-holders">
-                    <!-- {
-                        voteImage?.mediaItemUrl && (
-                            <img
-                                src={voteImage.mediaItemUrl}
-                                alt={voteImage.altText || formTitle}
-                                class="form-voteimage"
-                                height="162"
-                                width="162"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                        )
-                    } -->
+
 
                     <div class="main-formdata">
                         <div class="about-form">
                             <h6 class="fs-30">{formTitle}</h6>
                         </div>
 
-                        <form id="contact-form">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="universa-input">
-                                        <input
-                                            type="text"
-                                            name="fullname"
-                                            placeholder="Full Name"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="universa-input">
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            placeholder="Email"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="universa-input">
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            placeholder="Contact"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="universa-input">
-                                        <input
-                                            type="text"
-                                            name="zip"
-                                            placeholder="Zip Code"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="universa-input">
-                                        <textarea
-                                            name="message"
-                                            placeholder="Message"
-                                            rows="6"></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="submit-button">
-                                        <button type="submit" id="submit-btn"
-                                            >Submit the Form</button
-                                        >
-                                        <p id="form-status" class="error-msg">
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-
-                        <style>
-                            .error-text {
-                                color: #ff4d4d;
-                                font-size: 12px;
-                                margin-top: 4px;
-                                display: none; /* Hidden by default */
-                            }
-                        </style>
+                  
                     </div>
+                    <ContactForm  client:load />
+                        
                 </div>
             </div>
         </div>
@@ -289,111 +206,4 @@ const voteImage = contactData?.contactVoteImage?.node;
     }
 </style>
 
-<script
-    type="text/javascript"
-    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
-></script>
 
-
-<script client:load>
-  (() => {
-    const waitForEmailJS = () => {
-      return new Promise((resolve) => {
-        const check = () => {
-          if (window.emailjs) resolve();
-          else setTimeout(check, 50);
-        };
-        check();
-      });
-    };
-
-    const init = async () => {
-      await waitForEmailJS();
-
-      const PUBLIC_KEY = "anQHxdNzZ5YbFbYiJ";
-      const SERVICE_ID = "service_6mn1qpi";
-      const OWNER_TEMPLATE_ID = "template_gdjebaa";
-      const AUTOREPLY_TEMPLATE_ID = "template_o1uvef9";
-
-      emailjs.init(PUBLIC_KEY);
-
-      const form = document.getElementById("contact-form");
-      const submitBtn = document.getElementById("submit-btn");
-
-      if (!form || !submitBtn) return;
-
-      const updateError = (id, msg = "", show = false) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.textContent = msg;
-        el.style.display = show ? "block" : "none";
-      };
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        // Clear previous messages
-        ["err-fullname", "err-email", "err-phone", "err-zip", "form-status"]
-          .forEach(id => updateError(id));
-
-        const fullname = form.fullname.value.trim();
-        const email = form.email.value.trim();
-        const phone = form.phone.value.trim();
-        const zip = form.zip.value.trim();
-        const message = form.message.value.trim();
-
-        let valid = true;
-
-        // Simple check: Is the field empty?
-        if (!fullname) {
-          updateError("err-fullname", "Name is required", true);
-          valid = false;
-        }
-        if (!email) {
-          updateError("err-email", "Email is required", true);
-          valid = false;
-        }
-        if (!phone) {
-          updateError("err-phone", "Phone is required", true);
-          valid = false;
-        }
-        if (!zip) {
-          updateError("err-zip", "Zip code is required", true);
-          valid = false;
-        }
-
-        if (!valid) return;
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Sending...";
-
-        const params = {
-          fullname,
-          email,
-          phone,
-          zip,
-          message,
-          submitted_at: new Date().toLocaleString()
-        };
-
-        try {
-          await emailjs.send(SERVICE_ID, OWNER_TEMPLATE_ID, params);
-          await emailjs.send(SERVICE_ID, AUTOREPLY_TEMPLATE_ID, params);
-
-          updateError("form-status", "✅ Message sent successfully!", true);
-          document.getElementById("form-status").style.color = "green";
-          form.reset();
-        } catch (err) {
-          console.error(err);
-          updateError("form-status", "❌ Failed to send.", true);
-          document.getElementById("form-status").style.color = "red";
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Submit the Form";
-        }
-      });
-    };
-
-    init();
-  })();
-</script>
