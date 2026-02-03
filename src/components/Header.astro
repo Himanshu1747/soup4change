@@ -110,7 +110,7 @@ const menuItems = rawNodes
 								}
 							>
 								<HeaderLink
-									href={item.uri.replace(/\/$/, "")}
+									href={item.uri}
 									title={item.label}
 									target={item.target}
 								>
@@ -122,10 +122,7 @@ const menuItems = rawNodes
 										{item.children.map((child) => (
 											<li>
 												<HeaderLink
-													href={child.uri.replace(
-														/\/$/,
-														"",
-													)}
+													href={child.uri}
 													title={child.label}
 												>
 													{child.label}

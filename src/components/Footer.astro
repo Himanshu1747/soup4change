@@ -100,7 +100,7 @@ const menuItems = menuRes?.menu?.menuItems?.nodes ?? [];
             return (
               <li class={hasChildren ? "menu-item-has-children" : ""}>
                 <HeaderLink
-                  href={item.uri.replace(/\/$/, "")}
+                  href={item.uri}
                   title={item.label}
                   target={item.target}
                 >
