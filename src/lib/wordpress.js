@@ -54,7 +54,8 @@
 const wpCache = new Map();
 
 export async function queryWordPress(query, variables = {}) {
-  const endpoint = import.meta.env.WP_API_URL || "https://web.ogrelogicsolutions.com/soup4change.com/graphql";
+  // const endpoint = import.meta.env.WP_API_URL || "https://web.ogrelogicsolutions.com/soup4change.com/graphql";
+  const endpoint = import.meta.env.WP_API_URL || "https://admin.soup4change.com/graphql";
   
   // Create a unique key for this specific query and its variables
   const cacheKey = JSON.stringify({ query, variables });

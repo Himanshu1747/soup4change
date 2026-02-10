@@ -32,7 +32,7 @@ export const server = {
     handler: async (input) => {
       const transporter = getTransporter();
       const adminMail = {
-        from: `"Website Form" <${import.meta.env.SMTP_USER}>`,
+        from: `"soup4changes Form" <${import.meta.env.SMTP_USER}>`,
         to: "askmeanything@soup4change.com",
         replyTo: input.email,
         subject: `New Contact: ${input.fullname}`,
