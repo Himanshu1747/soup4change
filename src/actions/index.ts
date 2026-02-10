@@ -33,7 +33,7 @@ export const server = {
       const transporter = getTransporter();
       const adminMail = {
         from: `"Website Form" <${import.meta.env.SMTP_USER}>`,
-        to: "tech@ogrelogic.com",
+        to: "askmeanything@soup4change.com",
         replyTo: input.email,
         subject: `New Contact: ${input.fullname}`,
         text: `Name: ${input.fullname}\nEmail: ${input.email}\nContact: ${input.contact}\nZip: ${input.zip}\nMessage: ${input.message}`,

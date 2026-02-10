@@ -35,10 +35,9 @@ query popupdata {
 
 const pagedata = await queryWordPress(POPUP_DATA);
 const finaldata = pagedata?.page?.popup;
-const bgImage = finaldata?.backgroundImage?.node?.mediaItemUrl || "bg-image.webp";
+const bgImage =
+    finaldata?.backgroundImage?.node?.mediaItemUrl || "bg-image.webp";
 ---
-
-
 
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box" style="background-image: url(/bg-image.webp);">
@@ -51,7 +50,6 @@ const bgImage = finaldata?.backgroundImage?.node?.mediaItemUrl || "bg-image.webp
                     width="393"
                     height="223"
                     loading="lazy"
-                    
                 />
             </div>
             <div class="content-data">
@@ -62,7 +60,8 @@ const bgImage = finaldata?.backgroundImage?.node?.mediaItemUrl || "bg-image.webp
                         href={finaldata?.donateButton?.url || "error"}
                         title={finaldata?.mainTitle || "error"}
                         target={finaldata?.donateButton?.target || "error"}
-                        class="universal-button">{finaldata?.donateButton?.title || "error"}</a
+                        class="universal-button"
+                        >{finaldata?.donateButton?.title || "error"}</a
                     >
                 </div>
             </div>
@@ -196,23 +195,23 @@ const bgImage = finaldata?.backgroundImage?.node?.mediaItemUrl || "bg-image.webp
 </style>
 
 <script>
-  const setupModal = () => {
-    const overlay = document.getElementById('modalOverlay');
-    const openBtn = document.querySelector('.open-modaldata');
-    const closeBtn = document.querySelector('.close-icon');
-    const modalBox = document.querySelector('.modal-box');
-    const openModal = () => overlay.style.display = 'flex';
-    const closeModal = () => overlay.style.display = 'none';
+    const setupModal = () => {
+        const overlay = document.getElementById("modalOverlay");
+        const openBtn = document.querySelector(".open-modaldata");
+        const closeBtn = document.querySelector(".close-icon");
+        const modalBox = document.querySelector(".modal-box");
+        const openModal = () => (overlay.style.display = "flex");
+        const closeModal = () => (overlay.style.display = "none");
 
-    setTimeout(openModal, 10000);
-    openBtn?.addEventListener('click', openModal);
-    closeBtn?.addEventListener('click', closeModal);
-    overlay?.addEventListener('click', (event) => {
-      if (!modalBox.contains(event.target as Node)) {
-        closeModal();
-      }
-    });
-  };
-  setupModal();
-  document.addEventListener('astro:after-swap', setupModal);
+        setTimeout(openModal, 10000);
+        openBtn?.addEventListener("click", openModal);
+        closeBtn?.addEventListener("click", closeModal);
+        overlay?.addEventListener("click", (event) => {
+            if (!modalBox.contains(event.target as Node)) {
+                closeModal();
+            }
+        });
+    };
+    setupModal();
+    document.addEventListener("astro:after-swap", setupModal);
 </script>
