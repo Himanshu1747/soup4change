@@ -1,0 +1,209 @@
+---
+import { queryWordPress } from "../lib/wordpress";
+import ContactForm from '../components/ContactForm';
+
+const FORM_DATA_QUERY = `
+query contactform {
+  page(id: "contact", idType: URI) {
+    contactForm {
+      mainTitle
+      contactParagraph
+      formMainTitle
+      contactVoteImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+    }
+  }
+}
+`;
+
+const response = await queryWordPress(FORM_DATA_QUERY);
+const contactData = response?.page?.contactForm;
+const mainTitle = contactData?.mainTitle ?? "Get in Touch";
+const contactParagraph = contactData?.contactParagraph ?? "";
+const formTitle = contactData?.formMainTitle ?? "Contact Us";
+const voteImage = contactData?.contactVoteImage?.node;
+---
+
+<section class="contactform-sec">
+    <div class="container">
+        <div class="row form-row">
+            <div class="col-lg-6">
+                <div class="formdetails">
+                    <h4 class="fs-50">{mainTitle}</h4>
+                    {contactParagraph && <div set:html={contactParagraph} />}
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="form-holders">
+
+
+                    <div class="main-formdata">
+                        <div class="about-form">
+                            <h6 class="fs-30">{formTitle}</h6>
+                        </div>
+
+                  
+                    </div>
+                    <ContactForm  client:load />
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .form-holders {
+        max-width: 580px;
+        width: 100%;
+        margin: 0 auto;
+        border-radius: 30px;
+        background: rgba(63, 44, 188, 0.1);
+        padding: 55px 45px;
+        position: relative;
+    }
+
+    .universa-input input,
+    .submit-button button {
+        height: 50px;
+        background: var(--color-white);
+        border: none;
+    }
+
+    .universa-input input:focus-visible,
+    .universa-input textarea:focus-visible {
+        outline: none;
+    }
+
+    .universa-input input,
+    .universa-input textarea {
+        width: 100%;
+        padding: 5px 20px;
+        border: none;
+        border-radius: 10px;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .universa-input input::-webkit-input-placeholder,
+    .universa-input textarea::-webkit-input-placeholder {
+        color: #d2d2d3;
+    }
+
+    .universa-input {
+        margin-bottom: 20px;
+    }
+
+    .about-form {
+        padding-bottom: 10px;
+        position: relative;
+        z-index: 1;
+    }
+    .submit-button button {
+        width: 100%;
+        border-radius: 10px;
+        background: var(--color-blue);
+        color: var(--color-white);
+        text-align: center;
+        font-size: 26px;
+        font-weight: 700;
+        line-height: normal;
+        transition: 0.3s ease-in;
+    }
+    .submit-button button:hover {
+        background: var(--color-red);
+    }
+
+    .form-voteimage {
+        max-width: 162px;
+        width: 100%;
+        position: absolute;
+        top: -9%;
+        right: -13%;
+    }
+
+    .form-row {
+        align-items: center;
+    }
+    section.contactform-sec {
+        padding: 85px 0px;
+    }
+    .formdetails .fs-50 {
+        color: var(--color-blue);
+        padding-bottom: 20px;
+    }
+
+    .universa-input p {
+        font-size: 16px !important;
+        line-height: 16px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .submit-button p {
+        font-size: 20px !important;
+        padding-top: 10px !important;
+    }
+    @media (max-width: 1600px) {
+        .form-voteimage {
+            max-width: 112px;
+            top: -4%;
+            right: -7%;
+        }
+        .form-holders {
+            padding: 30px;
+        }
+
+        .about-form {
+            max-width: 390px;
+            width: 100%;
+            padding-bottom: 20px;
+        }
+    }
+
+    @media (max-width: 1400px) {
+        .universa-input input,
+        .submit-button button {
+            height: 40px;
+        }
+
+        .universa-input input,
+        .universa-input textarea,
+        .submit-button button {
+            font-size: 16px;
+        }
+        .universa-input input,
+        .universa-input textarea {
+            padding: 10px 15px;
+        }
+
+        section.contactform-sec {
+            padding: 60px 0px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .formdetails {
+            padding-bottom: 30px;
+        }
+
+        section.contactform-sec {
+            padding: 40px 0px;
+        }
+    }
+
+    @media (max-width: 575px) {
+        img.form-voteimage {
+            right: 0;
+            display: none;
+        }
+    }
+</style>
+
+

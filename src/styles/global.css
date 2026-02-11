@@ -1,0 +1,715 @@
+a,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul {
+    margin: 0;
+    padding: 0
+}
+
+.universal-button,
+a {
+    display: inline-block;
+    transition: color .3s
+}
+
+.fs-150,
+.fs-200,
+.fs-30,
+.fs-60,
+.fs-80,
+p {
+    line-height: normal
+}
+
+.about-shelby p,
+.fs-80,
+p,
+span.placeholder_text {
+    font-style: normal;
+    font-weight:500;
+}
+
+
+
+
+.universal-button,
+.yellow-form section.contactform-sec {
+    background: var(--color-yellow)
+}
+
+.blue-form .formdetails .fs-50,
+.universal-button.red-text:hover {
+    color: var(--color-white) !important
+}
+
+.blue-form .submit-button button:hover,
+.universal-button.red-text:hover {
+    background: var(--color-red) !important
+}
+
+body {
+    /* font-family: Inter, sans-serif */
+    font-family: "Montserrat", sans-serif;
+
+}
+
+.about-shelby .fs-150,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    padding-bottom: 10px
+}
+
+li {
+    list-style: none
+}
+
+img {
+    max-width: 100%;
+    height: auto
+}
+
+a {
+    text-decoration: none;
+    color: inherit
+}
+
+p {
+    font-size: 20px;
+    line-height: 30px;
+}
+
+input,
+select,
+textarea {
+    width: 100%
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 0
+}
+
+:root {
+    --color-black: #000;
+    --color-white: #fff;
+    --color-red: #D51D75;
+    --color-1E1E1E: #1E1E1E;
+    --color-yellow: #F1B53B;
+    --color-blue: #000;
+    --color-D2D2D3: #D2D2D3;
+    --fs-200: 200px;
+    --fs-150: 150px;
+    --fs-80: 70px;
+    --fs-60: 55px;
+    --fs-30: 30px;
+    --fs-20: 20px;
+    --fs-40: 40px;
+    --lh-40: 40px;
+    --fs-50: 50px
+}
+
+.fs-80 {
+    color: #1e1e1e;
+    font-size: var(--fs-80)
+}
+
+.fs-200,
+.fs-30 {
+    font-weight: 700
+}
+
+.text-blue {
+    color: var(--color-blue) !important
+}
+
+.text-red {
+    color: var(--color-red) !important
+}
+
+.text-1e1e1e {
+    color: var(--color-1E1E1E) !important
+}
+
+.universal-button {
+    position: relative;
+    color: var(--color-blue);
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 13px 40px;
+    overflow: hidden;
+    z-index: 0;
+    text-align: center
+}
+
+.shelby-holders::after,
+.universal-button::before,
+.vote-image,
+img.shelby-vote {
+    position: absolute;
+    width: 100%
+}
+
+.universal-button::before {
+    content: "";
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #f1b53b 0, #d6006d 100%);
+    opacity: 0;
+    transition: opacity .5s;
+    z-index: -1;
+    border-radius: 10px
+}
+
+.universal-button:hover::before {
+    opacity: 1
+}
+
+.universal-button:hover {
+    color: var(--color-white)
+}
+
+span.placeholder_text {
+    display: block;
+    border-radius: 6px;
+    background: var(--color-D2D2D3);
+    max-width: fit-content;
+    color: var(--color-1E1E1E);
+    font-size: 16px;
+    line-height: normal;
+    padding: 5px 10px;
+    margin-bottom: 10px
+}
+
+.fs-200 {
+    color: rgba(63, 44, 188, .1);
+    font-size: var(--fs-200);
+    font-style: normal
+}
+
+.button-data {
+    max-width: fit-content;
+    width: 100%
+}
+
+.overlap-heading {
+    letter-spacing: 56px;
+    margin-bottom: -5%;
+    padding-bottom: 0;
+    text-align: center
+}
+
+.fs-30 {
+    font-size: var(--fs-30);
+    font-style: normal
+}
+
+.vote-image {
+    max-width: 100px;
+    top: -30%;
+    right: 2%
+}
+
+.universal-button.red-text {
+    background: var(--color-white);
+    color: var(--color-red)
+}
+
+.universal-button.red-text::before{
+    display: none
+}
+
+.shelby-holders {
+    color: var(--color-white);
+    overflow: hidden;
+    padding: 25px 10px 0 55px;
+    position: relative
+}
+
+.contact-details,
+.grid-button {
+    display: flex;
+    padding-top: 20px
+}
+
+.shelby-holders::after {
+    background: var(--color-blue);
+    content: "";
+    height: 88%;
+    bottom: 0;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    border-radius: 30px
+}
+
+.about-shelby {
+    max-width: 870px;
+    width: 100%;
+    margin-top:10%;
+    padding-bottom: 30px
+}
+
+.fs-40,
+.fs-50 {
+    font-weight: 800;
+    padding-bottom: 15px
+}
+
+.shelby-image {
+    max-width: 448px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative
+}
+
+.grid-button {
+    gap: 20px
+}
+
+.fs-150 {
+    font-size: var(--fs-150);
+    font-style: normal;
+    font-weight: 700
+}
+
+.fs-60 {
+    font-size: var(--fs-60);
+    font-style: normal;
+    font-weight: 800;
+}
+
+/* .about-shelby p {
+    font-size: var(--fs-20);
+    line-height: normal
+} */
+
+.allparahere p,
+.contact-emails p,
+.political-data p {
+    font-size: var(--fs-20);
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal
+}
+
+/* .about-shelby .fs-60 {
+    margin-bottom: -30px
+} */
+
+img.shelby-vote {
+    max-width: 198px;
+    right: -8%;
+    top: 0;
+}
+
+.shelbymain-imge,
+.yellow-form {
+    position: relative;
+    z-index: 1
+}
+
+section.whytrustshelby-sec {
+    padding: 60px 0
+}
+
+.fs-50 {
+    font-size: var(--fs-50);
+    font-style: normal;
+    line-height: normal
+}
+
+section.innserbanner-sec {
+    max-width: 100%;
+    height: 707px;
+    overflow: hidden
+}
+
+.innerbanner-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center
+}
+
+.yellow-form .form-holders {
+    background: var(--color-red) !important;
+    color: var(--color-white)
+}
+
+.blue-form section.contactform-sec {
+    background: var(--color-red);
+    color: var(--color-white)
+}
+
+.blue-form .form-holders {
+    background: rgba(255, 255, 255, .2) !important
+}
+
+.blue-form .submit-button button {
+    background: var(--color-yellow) !important
+}
+
+.fs-40 {
+    font-size: var(--fs-40);
+    font-style: normal;
+    line-height: normal
+}
+
+.allparahere p,
+.political-data p {
+    color: var(--color-1E1E1E);
+    padding-bottom: 15px !important
+}
+
+.contact-details {
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center
+}
+
+.contact-emails {
+    max-width: fit-content;
+    width: 100%;
+    text-align: center
+}
+
+img.detsil-icon {
+    max-width: 30px;
+    width: 100%;
+    margin: 0 auto 15px
+}
+
+ul.footer-list li a {
+    text-transform: capitalize
+}
+.contact-emails.congress img {
+    max-width: 120px;
+}
+
+@media(min-width:1600px) {
+    .container {
+        max-width: 1600px
+    }
+}
+
+@media(max-width:1600px) {
+    :root {
+        --fs-200: 150px;
+        --fs-80: 70px;
+        --fs-30: 25px;
+        --fs-150: 110px;
+        --fs-60: 50px;
+        --fs-20: 17px;
+        --lh-40: 35px;
+        --fs-40: 34px;
+        --fs-50: 40px
+    }
+
+    .overlap-heading {
+        letter-spacing: 50px
+    }
+
+    .about-shelby p {
+        line-height: 24px
+    }
+
+    .universal-button {
+        font-size: 18px;
+        padding: 10px 35px
+    }
+
+    p {
+        font-size: 20px;
+        line-height: 28px
+    }
+
+    section.innserbanner-sec {
+        height: 550px
+    }
+}
+
+@media(max-width:1399px) {
+    :root {
+        --fs-200: 125px;
+        --fs-80: 60px;
+        --fs-30: 20px;
+        --fs-150: 80px;
+        --fs-60: 35px;
+        --fs-20: 16px;
+        --fs-40: 28px;
+        --lh-40: 26px;
+        --fs-50: 35px
+    }
+
+    /* .about-shelby .fs-60 {
+        margin-bottom: -10px
+    } */
+
+    .universal-button {
+        font-size: 16px;
+        padding: 8px 25px
+    }
+
+    img.shelby-vote {
+        max-width: 130px;
+        right: 0;
+    }
+
+    .grid-button {
+        flex-wrap: wrap;
+        padding-top: 10px
+    }
+
+    section.whytrustshelby-sec {
+        padding: 40px 0
+    }
+
+    .about-shelby .fs-150 {
+        padding-bottom: 5px
+    }
+
+    .shelby-holders {
+        padding: 25px 10px 0 40px
+    }
+
+    p {
+        font-size: 16px;
+        line-height: 25px
+    }
+
+    section.innserbanner-sec {
+        height: 400px
+    }
+
+    .allparahere p,
+    .political-data p {
+        padding-bottom: 10px
+    }
+}
+
+@media(max-width:1199px) {
+    :root {
+        --fs-200: 99px;
+        --fs-80: 50px;
+        --fs-30: 20px;
+        --fs-150: 70px;
+        --fs-60: 30px;
+        --fs-50: 30px
+    }
+
+    .overlap-heading {
+        letter-spacing: 25px;
+        text-align: start;
+        margin-bottom: 0;
+        padding-bottom: 15px
+    }
+
+    .shelby-holders::after {
+        height: 100%
+    }
+
+    .shelby-holders {
+        padding: 30px 10px 0
+    }
+
+    .about-shelby {
+        margin-top: 0
+    }
+}
+
+@media(max-width:991px) {
+    :root {
+        --fs-200: 55px;
+        --fs-80: 45px;
+        --fs-150: 60px;
+        --fs-60: 30px;
+        --fs-40: 24px
+    }
+
+    .overlap-heading {
+        letter-spacing: 5px
+    }
+
+    .fs-50 {
+        padding-bottom: 10px
+    }
+}
+
+@media(max-width:767px) {
+    :root {
+        --fs-200: 45px;
+        --fs-80: 35px;
+        --fs-50: 25px
+    }
+}
+
+@media(max-width:575px) {
+    img.shelby-vote {
+        display: none;
+    }
+}
+
+
+
+
+.form-holders {
+        max-width: 580px;
+        width: 100%;
+        margin: 0 auto;
+        border-radius: 30px;
+        background: rgba(63, 44, 188, 0.1);
+        padding: 55px 45px;
+        position: relative;
+    }
+
+    .universa-input input,
+    .submit-button button {
+        height: 50px;
+        background: var(--color-white);
+        border: none;
+    }
+
+    .universa-input input:focus-visible,
+    .universa-input textarea:focus-visible {
+        outline: none;
+    }
+
+    .universa-input input,
+    .universa-input textarea {
+        width: 100%;
+        padding: 5px 20px;
+        border: none;
+        border-radius: 10px;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .universa-input input::-webkit-input-placeholder,
+    .universa-input textarea::-webkit-input-placeholder {
+        color: #d2d2d3;
+    }
+
+    .universa-input {
+        margin-bottom: 20px;
+    }
+
+    .about-form {
+        padding-bottom: 35px;
+        position: relative;
+        z-index: 1;
+    }
+    .submit-button button {
+        width: 100%;
+        border-radius: 10px;
+        background: var(--color-blue);
+        color: var(--color-white);
+        text-align: center;
+        font-size: 26px;
+        font-weight: 700;
+        line-height: normal;
+        transition: 0.3s ease-in;
+    }
+    .submit-button button:hover {
+        background: var(--color-red);
+    }
+
+    .form-voteimage {
+        max-width: 162px;
+        width: 100%;
+        position: absolute;
+        top: -9%;
+        right: -13%;
+    }
+
+    .form-row {
+        align-items: center;
+    }
+    section.contactform-sec {
+        padding: 85px 0px;
+    }
+    .formdetails .fs-50 {
+        color: var(--color-blue);
+        padding-bottom: 20px;
+    }
+
+    .universa-input p {
+        font-size: 16px !important;
+        line-height: 16px !important;
+        margin-top: 5px !important;
+        padding: 0 !important;
+    }
+    .submit-button p {
+        font-size: 20px !important;
+        padding-top: 10px !important;
+    }
+    @media (max-width: 1600px) {
+        .form-voteimage {
+            max-width: 112px;
+            top: -4%;
+            right: -7%;
+        }
+        .form-holders {
+            padding: 30px;
+        }
+
+        .about-form {
+            max-width: 390px;
+            width: 100%;
+            padding-bottom: 20px;
+        }
+    }
+
+    @media (max-width: 1400px) {
+        .universa-input input,
+        .submit-button button {
+            height: 40px;
+        }
+
+        .universa-input input,
+        .universa-input textarea,
+        .submit-button button {
+            font-size: 16px;
+        }
+        .universa-input input,
+        .universa-input textarea {
+            padding: 10px 15px;
+        }
+
+        section.contactform-sec {
+            padding: 60px 0px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .formdetails {
+            padding-bottom: 30px;
+        }
+
+        section.contactform-sec {
+            padding: 40px 0px;
+        }
+    }
+
+    @media (max-width: 575px) {
+        img.form-voteimage {
+            right: 0;
+            display: none;
+        }
+    }

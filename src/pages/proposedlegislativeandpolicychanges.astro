@@ -1,0 +1,240 @@
+---
+import { queryWordPress } from "../lib/wordpress";
+import BaseHead from "../components/BaseHead.astro";
+import Contactform from "../components/Contactform.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+
+const PROPOSED_QUERY = `
+query Proposed {
+  page(id: "proposedlegislativeandpolicychanges", idType: URI) {
+    title
+    seo {
+      focuskw
+      canonical
+      fullHead
+    }
+    featuredImage {
+      node {
+        mediaItemUrl
+        altText
+        fileSize
+      }
+    }
+    proposed {
+      congressTitle
+      guidingParagraph
+      guidingImage {
+        node {
+          mediaItemUrl
+          altText
+          fileSize
+        }
+      }
+      issuesWeStandFor {
+        visionTitle
+        vision_details
+      }
+    }
+  }
+}
+`;
+
+const pagedata = await queryWordPress(PROPOSED_QUERY);
+const finaldata = pagedata?.page;
+const acfdata = finaldata?.proposed;
+
+// Extract Hero Image URL for Preloading
+const heroImageUrl = finaldata?.featuredImage?.node?.mediaItemUrl;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead useYoast={true} />
+        {finaldata?.seo?.fullHead && <Fragment set:html={finaldata.seo.fullHead} />}
+        {heroImageUrl && <link rel="preload" as="image" href={heroImageUrl} fetchpriority="high" />}
+    </head>
+
+    <body>
+        <Header />
+        <section class="innserbanner-sec">
+            <img
+                src={heroImageUrl || "error"}
+                alt={finaldata?.featuredImage?.node?.altText || finaldata?.title || "Proposed Changes"}
+                width="1920"
+                height="707"
+                class="innerbanner-image"
+                loading="eager"
+                fetchpriority="high"
+                decoding="sync"
+            />
+        </section>
+
+        <section class="guiding-sec">
+            <div class="container">
+                <h1 class="fs-200 overlap-heading">
+                    {acfdata?.congressTitle || ""}
+                </h1>
+
+                <div class="row align-items-center guiding-row">
+                    <div class="col-lg-7">
+                        <div
+                            class="guiding-data"
+                            set:html={acfdata?.guidingParagraph || ""}
+                        />
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="guiding-image">
+                            <img
+                                src={acfdata?.guidingImage?.node?.mediaItemUrl || "error"}
+                                alt={acfdata?.guidingImage?.node?.altText || "Guiding Principle"}
+                                width="632"
+                                height="358"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="polticalleader-sec">
+            <div class="grid-political">
+                {
+                    acfdata?.issuesWeStandFor?.map((items) => (
+                        <div class="political-data">
+                            <div class="political-inside">
+                                <h5 class="fs-40 text-blue">{items?.visionTitle || ""}</h5>
+                                <div class="allparahere" set:html={items?.vision_details || ""}></div>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </section>
+
+        <div class="blue-form">
+            <Contactform />
+        </div>
+
+        <Footer />
+         <style>
+            .guiding-image {
+                max-width: 632px;
+                width: 100%;
+                border-radius: 20px;
+                overflow: hidden;
+            }
+
+            .guiding-data {
+                max-width: 96%;
+                width: 100%;
+            }
+
+            .guiding-data p {
+                color: var(--color-1E1E1E);
+                font-size: var(--fs-30);
+                font-style: normal;
+                font-weight: 700;
+                line-height: normal;
+            }
+
+            section.guiding-sec .fs-200.overlap-heading {
+                margin-bottom: -4%;
+                margin-top: -4%;
+            }
+
+            section.guiding-sec {
+                padding-bottom: 80px;
+            }
+
+            .political-data {
+                background: rgba(63, 44, 188, 0.1);
+                padding: 50px;
+            }
+
+            .grid-political {
+                display: grid;
+                gap: 20px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                padding-bottom: 40px;
+                width: 100%;
+            }
+
+            .political-inside {
+                max-width: 86.2%;
+                width: 100%;
+                margin-left: auto;
+            }
+
+            .grid-political
+                .political-data:nth-last-child(odd)
+                .political-inside {
+                margin-left: none;
+                margin: 0;
+            }
+
+           
+
+            .political-data .fs-40 {
+                padding-bottom: 30px;
+            }
+
+            @media (max-width: 1400px) {
+                .political-data .fs-40 {
+                    padding-bottom: 15px;
+                }
+               
+
+                section.guiding-sec {
+                    padding-bottom: 50px;
+                }
+            }
+
+            @media (max-width: 1199px) {
+                .political-data {
+                    padding: 30px;
+                }
+            }
+            @media (max-width: 991px) {
+                .guiding-data {
+                    max-width: 100%;
+                    padding-bottom: 30px;
+                }
+
+                section.guiding-sec .fs-200.overlap-heading {
+                    margin-bottom: 0;
+                    margin-top: 0;
+                }
+
+                .political-data {
+                    padding: 20px;
+                }
+
+                section.guiding-sec {
+                    padding-bottom: 40px;
+                }
+            }
+
+            @media (max-width: 767px) {
+                .political-inside {
+                    max-width: 100%;
+                    width: 100%;
+                    margin: 0 !important;
+                }
+
+                .grid-political {
+                    grid-template-columns: repeat(1, minmax(0, 1fr));
+                }
+            }
+
+            @media (max-width: 575px) {
+                .political-data {
+                    padding: 20px 10px;
+                }
+            }
+        </style>
+    </body>
+</html>
