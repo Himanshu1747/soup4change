@@ -1,0 +1,768 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Contactform from "../components/Contactform.astro";
+import Counter from "../components/Counter.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Merchendise from "../components/Merchendise.astro";
+import { queryWordPress } from "../lib/wordpress";
+
+// 1. Fetch Page Data
+const ABOUT_QUERY = `
+query AboutPage {
+  page(id: "about", idType: URI) {
+    title
+    seo {
+      focuskw
+      canonical
+      fullHead
+    }
+    featuredImage {
+      node {
+        mediaItemUrl
+        altText
+      }
+    }
+    aboutpage {
+      whyTrust
+      shelby
+      aboutShelby
+      shortIntro
+      childImageFirst {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      childImageSecond {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      community
+      communityList
+      politicianHeading
+      politicianParagraph
+      congressHeading
+      titleGotToThisPoint
+      descriptionToThisPoint
+      shelbyImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      voteImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      politicianImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      gotToThisPointImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+ 
+      donateSupport {
+        url
+        title
+        target
+      }
+      lackDescription
+      lackImage {
+        node {
+          mediaItemUrl
+          altText
+        }
+      }
+      educationTitle
+      educationDetails {
+        educationIcon {
+          node {
+            mediaItemUrl
+            altText
+          }
+        }
+        titleEducations
+        educationShortIntro
+      }
+    }
+  }
+}
+`;
+
+const aboutResponse = await queryWordPress(ABOUT_QUERY);
+
+// Assign Data Safely
+const pagedata = aboutResponse?.page;
+const intro = pagedata?.aboutpage;
+const heroImage = pagedata?.featuredImage?.node?.mediaItemUrl;
+
+// Ensure Education mapping matches the GraphQL response
+const educationList = intro?.educationDetails || [];
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead
+            title={pagedata?.title}
+            description={intro?.shortIntro}
+            useYoast={true}
+            canonical={pagedata?.seo?.canonical}
+            focuskw={pagedata?.seo?.focuskw}
+        />
+        {
+            pagedata?.seo?.fullHead && (
+                <Fragment set:html={pagedata.seo.fullHead} />
+            )
+        }
+        {
+            heroImage && (
+                <link
+                    rel="preload"
+                    as="image"
+                    href={heroImage}
+                    fetchpriority="high"
+                />
+            )
+        }
+    </head>
+
+    <body>
+        <Header />
+
+        <section class="innserbanner-sec">
+            <img
+                src={heroImage || "/placeholder.jpg"}
+                alt={pagedata?.featuredImage?.node?.altText || "error"}
+                width="1920"
+                height="707"
+                class="innerbanner-image"
+                fetchpriority="high"
+                decoding="sync"
+                loading="eager"
+            />
+        </section>
+
+        <section class="whytrustshelby-sec inner-page">
+            <div class="container">
+                <div class="shelby-holders">
+                    <div class="row">
+                        <div class="col-xl-8">
+                            <div class="about-shelby">
+                                <h6 class="fs-60 text-blue">
+                                    {intro?.whyTrust || ""}
+                                </h6>
+                                <h1 class="fs-150 text-blue">
+                                    {intro?.shelby || ""}
+                                </h1>
+                                <div set:html={intro?.aboutShelby || ""} />
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="shelby-image">
+                                <img
+                                    src={intro?.shelbyImage?.node
+                                        ?.mediaItemUrl || "error"}
+                                    alt="Shelby"
+                                    width="448"
+                                    height="677"
+                                    loading="lazy"
+                                    class="shelbymain-imge"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="community-holders">
+                        <div class="center-datacommunity">
+                            <h2 class="fs-30">{intro?.community || ""}</h2>
+                        </div>
+                        <div set:html={intro?.communityList || ""} />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="honestpoltician-sec">
+            <div class="container">
+                <div class="row align-items-center honest-polyician">
+                    <div class="col-lg-5">
+                        <div class="main-imagepoltican">
+                            <img
+                                src={intro?.politicianImage?.node
+                                    ?.mediaItemUrl || "error"}
+                                alt={intro?.politicianHeading || "error"}
+                                width="552"
+                                height="635"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="abouthonesty">
+                            <h4 class="fs-60 text-red">
+                                {intro?.politicianHeading || ""}
+                            </h4>
+                            <div set:html={intro?.politicianParagraph || ""} />
+                            <div class="universal-anchor">
+                                <a
+                                    href={intro?.donateSupport?.url || "#"}
+                                    target={intro?.donateSupport?.target ||
+                                        "_self"}
+                                    class="universal-button"
+                                >
+                                    {
+                                        intro?.donateSupport?.title ||
+                                            "Donate & Support"
+                                    }
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="howshelbygotthis-sec">
+            <div class="container">
+                <div class="centerdata-shelbyy">
+                    <h3 class="fs-60 text-red">
+                        {intro?.titleGotToThisPoint || ""}
+                    </h3>
+                    <div set:html={intro?.descriptionToThisPoint || ""} />
+                </div>
+
+                <div class="onlygroup-imagess">
+                    <div class="container">
+                        <div class="shelby-imageegroup">
+                            <img
+                                src={intro?.gotToThisPointImage?.node
+                                    ?.mediaItemUrl || "error"}
+                                alt="Group Image"
+                                width="1024"
+                                height="396"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="row shelby-row">
+                    <div class="col-lg-6">
+                        <div class="hey-everyone">
+                            <div set:html={intro?.shortIntro || ""} />
+                            <div class="universal-anchor">
+                                <a
+                                    href={intro?.donateSupport?.url || "#"}
+                                    target={intro?.donateSupport?.target ||
+                                        "_self"}
+                                    class="universal-button"
+                                >
+                                    {
+                                        intro?.donateSupport?.title ||
+                                            "Donate & Support"
+                                    }
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="image-view">
+                            <img
+                                src={intro?.childImageFirst?.node?.mediaItemUrl ||
+                                    "/placeholder.jpg"}
+                                alt={intro?.childImage1?.node?.altText ||
+                                    "Experience 1"}
+                                class="first-image"
+                                width="425"
+                                height="319"
+                                loading="lazy"
+                            />
+                            <img
+                                src={intro?.childImageSecond?.node?.mediaItemUrl ||
+                                    "/placeholder.jpg"}
+                                alt={intro?.childImage2?.node?.altText ||
+                                    "Experience 2"}
+                                class="second-image"
+                                width="355"
+                                height="399"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stillediting-sec">
+            <div class="container">
+                <div class="row align-items-center row-editing">
+                    <div class="col-lg-6">
+                        <div class="editing-image">
+                            <img
+                                src={intro?.lackImage?.node?.mediaItemUrl ||
+                                    "error"}
+                                alt=" Still Editing These"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="editing-details">
+                            <!-- <h3 class="fs-60">
+                                {finalendormsent?.mainTitle || ""}
+                            </h3> -->
+                            <div set:html={intro?.lackDescription || ""} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="education-sec">
+            <div class="container">
+                <div class="center-eductaion">
+                    <h2 class="fs-60 text-blue">
+                        {intro?.educationTitle || ""}
+                    </h2>
+                </div>
+                <div class="grid-education">
+                    {
+                        educationList.map((item) => (
+                            <div class="highscholl-holders">
+                                <div class="inside-dataa">
+                                    <img
+                                        src={
+                                            item?.educationIcon?.node
+                                                ?.mediaItemUrl || "/icon.png"
+                                        }
+                                        alt={item?.titleEducations || "Icon"}
+                                        height="48"
+                                        width="48"
+                                        loading="lazy"
+                                        class="icon-educstionss"
+                                    />
+                                    <h4 class="fs-30">
+                                        {item?.titleEducations || ""}
+                                    </h4>
+                                    <div
+                                        set:html={
+                                            item?.educationShortIntro || ""
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+        <Merchendise />
+
+        <div class="yellow-form">
+            <Contactform />
+        </div>
+
+        <Footer />
+        <style>
+            section.whytrustshelby-sec.inner-page .shelby-holders {
+                color: initial;
+            }
+
+            section.whytrustshelby-sec.inner-page .shelby-holders::after {
+                display: none;
+            }
+
+            section.whytrustshelby-sec.inner-page .shelby-holders {
+                padding: 0;
+            }
+
+            .innercounter {
+                max-width: 1315px;
+                width: 100%;
+                margin: 0 auto;
+                padding-top: 50px;
+                /* padding: 80px 0px; */
+            }
+
+            .innercounter .grid-counter {
+                max-width: 100%;
+            }
+            .icon-educstionss {
+                margin-bottom: 15px;
+            }
+
+            .community-holders {
+                padding: 45px 60px;
+                border-radius: 20px;
+                background: var(--color-blue);
+                color: var(--color-white);
+                margin-top: 50px;
+            }
+
+            .center-datacommunity {
+                text-align: center;
+                padding-bottom: 50px;
+            }
+
+            .community-holders ul li {
+                list-style: disc;
+                font-size: var(--fs-20);
+                font-weight: 400;
+                padding-bottom: 5px;
+            }
+
+            .community-holders ul {
+                padding-left: 10px;
+                display: grid;
+                column-gap: 70px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .abouthonesty {
+                max-width: 868px;
+                width: 100%;
+                margin: 0 auto;
+            }
+
+            .main-imagepoltican {
+                max-width: 552px;
+                width: 100%;
+                overflow: hidden;
+                margin: 0 auto;
+                border-radius: 20px;
+            }
+
+            .abouthonesty .fs-60 {
+                padding-bottom: 30px;
+            }
+
+            .abouthonesty .universal-anchor {
+                padding-top: 50px;
+            }
+
+            section.honestpoltician-sec {
+                padding-top: 50px;
+            }
+
+            .shelby-imageegroup {
+                max-width: fit-content;
+                margin: 0 auto;
+            }
+
+            .onlygroup-imagess {
+                padding: 40px 0px 70px 0px;
+            }
+
+            .shelby-imageegroup img {
+                border-radius: 10px;
+            }
+            .centerdata-shelbyy {
+                max-width: 895px;
+                width: 100%;
+                margin: 0 auto;
+                text-align: center;
+            }
+            .centerdata-shelbyy .fs-60,
+            .hey-everyone .fs-60 {
+                padding-bottom: 20px;
+            }
+
+            .hey-everyone {
+                max-width: 92%;
+                width: 100%;
+            }
+            .hey-everyone p {
+                font-size: var(--fs-20);
+                font-style: normal;
+                font-weight: 500;
+                line-height: 145%;
+            }
+
+            .hey-everyone .universal-anchor {
+                padding-top: 50px;
+            }
+
+            .image-view img {
+                max-width: fit-content;
+                position: relative;
+                border-radius: 20px;
+                overflow: hidden;
+            }
+
+            .image-view {
+                max-width: 775px;
+                width: 100%;
+                /* background: red; */
+                display: flex;
+                position: relative;
+                z-index: 1;
+            }
+            .image-view .second-image {
+                margin-top: 7%;
+                z-index: -11;
+                transform: translateX(-6%);
+            }
+
+            .image-view img.first-image {
+                z-index: -1;
+                height: fit-content;
+            }
+
+            section.howshelbygotthis-sec {
+                padding: 60px 0px;
+            }
+
+            section.education-sec {
+                padding: 50px 0px;
+                background: rgba(63, 44, 188, 0.1);
+            }
+            .highscholl-holders {
+                max-width: 305px;
+                width: 100%;
+                min-height: 368px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 30px;
+                border-radius: 30px;
+                background: var(--color-yellow);
+                color: var(--color-white);
+                text-align: center;
+            }
+
+            .highscholl-holders .fs-30 {
+                font-weight: 500;
+                padding-bottom: 15px;
+            }
+
+            img.education-icon {
+                max-width: 48px;
+                width: 100%;
+                margin: 0 auto 35px;
+            }
+
+            .highscholl-holders p {
+                font-size: var(--fs-20);
+                font-weight: 500;
+            }
+
+            .grid-education {
+                display: grid;
+                gap: 50px;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                max-width: fit-content;
+                margin: 0 auto;
+                width: 100%;
+            }
+
+            .center-eductaion {
+                max-width: fit-content;
+                margin: 0 auto;
+                width: 100%;
+                padding-bottom: 75px;
+            }
+
+            .grid-education .highscholl-holders:nth-child(2) {
+                background: #8a38f5;
+            }
+            .grid-education .highscholl-holders:nth-child(3) {
+                background: #d51d75;
+            }
+            .grid-education .highscholl-holders:nth-child(4) {
+                background: #1e1e1e;
+            }
+
+            .editing-image {
+                max-width: fit-content;
+                margin: 0 auto;
+                border-radius: 20px;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            .gridbuttonss {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                padding-top: 30px;
+            }
+
+            .gridbuttonss .universal-anchor {
+                max-width: 253px;
+                width: 100%;
+                display: block;
+            }
+
+            .gridbuttonss .universal-anchor a {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .editing-details .fs-60 {
+                padding-bottom: 20px;
+            }
+
+            .editing-details p {
+                color: var(--color-blue) !important;
+            }
+
+            section.stillediting-sec {
+                padding: 85px 0px;
+            }
+            .shelby-image img {
+                border-radius: 10px;
+            }
+
+            .editing-details {
+                max-width: 95%;
+                width: 100%;
+                margin: 0 auto;
+            }
+            .shelby-row {
+    align-items: center;
+}
+
+            @media (max-width: 1600px) {
+                .innercounter {
+                    padding: 40px 0px;
+                    padding-bottom: 0;
+                }
+
+                .abouthonesty {
+                    max-width: 90%;
+                }
+
+                .abouthonesty .universal-anchor {
+                    padding-top: 20px;
+                }
+
+                .main-imagepoltican {
+                    max-width: 450px;
+                }
+
+                section.honestpoltician-sec {
+                    padding-top: 20px;
+                }
+                .highscholl-holders {
+                    min-height: auto;
+                    padding: 30px 20px;
+                }
+
+                .center-eductaion {
+                    padding-bottom: 50px;
+                }
+
+                section.stillediting-sec {
+                    padding: 60px 0px;
+                }
+            }
+
+            @media (max-width: 1400px) {
+                .abouthonesty .fs-60 {
+                    padding-bottom: 15px;
+                }
+
+                .center-datacommunity {
+                    padding-bottom: 30px;
+                }
+                .onlygroup-imagess {
+                    padding-top: 30px;
+                }
+                section.howshelbygotthis-sec {
+                    padding: 40px 0px;
+                }
+
+                .hey-everyone .universal-anchor {
+                    padding-top: 20px;
+                }
+
+                section.education-sec,
+                section.stillediting-sec {
+                    padding: 40px 0px;
+                }
+
+                .community-holders {
+                    margin-top: 30px;
+                }
+            }
+
+            @media (max-width: 1199px) {
+                .community-holders {
+                    padding: 30px;
+                }
+
+                .community-holders ul {
+                    column-gap: 30px;
+                }
+                .grid-education {
+                    gap: 30px;
+                }
+
+                .center-eductaion {
+                    padding-bottom: 30px;
+                }
+                .onlygroup-imagess {
+                    padding: 30px 0px 30px 0px;
+                }
+            }
+
+            @media (max-width: 991px) {
+                .honest-polyician {
+                    gap: 30px;
+                }
+
+                .abouthonesty {
+                    max-width: 100%;
+                    text-align: center;
+                }
+                .hey-everyone {
+                    max-width: 100%;
+                    padding-bottom: 30px;
+                }
+
+                .centerdata-shelbyy .fs-60,
+                .hey-everyone .fs-60 {
+                    padding-bottom: 15px;
+                }
+
+                .grid-education {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .editing-details {
+                    padding-top: 30px;
+                    text-align: center;
+                }
+                .gridbuttonss {
+                    justify-content: center;
+                }
+            }
+
+            @media (max-width: 767px) {
+                .community-holders ul {
+                    grid-template-columns: repeat(1, minmax(0, 1fr));
+                }
+                .center-datacommunity {
+                    padding-bottom: 10px;
+                }
+                img.education-icon {
+                    margin: 0 auto 15px;
+                }
+            }
+            @media (max-width: 575px) {
+                .grid-education {
+                    grid-template-columns: repeat(1, minmax(0, 1fr));
+                }
+            }
+        </style>
+    </body>
+</html>

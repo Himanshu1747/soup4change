@@ -1,0 +1,65 @@
+---
+import { queryWordPress } from "../lib/wordpress";
+import BaseHead from "../components/BaseHead.astro";
+import Contactform from "../components/Contactform.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+
+const CONTACTQUERY = `
+query contactform {
+  page(id: "contact", idType: URI) {
+    title
+    id
+    seo {
+     focuskw
+      canonical
+      fullHead
+    }
+    featuredImage {
+      node {
+        mediaItemUrl
+        altText
+      }
+    }
+  }
+}
+`;
+
+const contactdata = await queryWordPress(CONTACTQUERY);
+const finaaldata = contactdata?.page;
+const heroImage = finaaldata?.featuredImage?.node?.mediaItemUrl;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead useYoast={true} 
+         canonical={finaaldata?.seo?.canonical} 
+        focuskw={finaaldata?.seo?.focuskw} 
+        />
+        {finaaldata?.seo?.fullHead && <Fragment set:html={finaaldata.seo.fullHead} />}
+        {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high" />}
+    </head>
+
+    <body>
+        <Header />
+        <section class="innserbanner-sec">
+          <img
+          src={heroImage || "error"}
+          alt={finaaldata?.featuredImage?.node?.altText || finaaldata?.title || "Contact Us"}
+          width="1920"
+          height="707"
+          class="innerbanner-image"
+          loading="eager"
+          fetchpriority="high"
+          decoding="sync"
+          />
+        </section>
+
+        <div class="blue-form">
+            <Contactform />
+        </div>
+
+        <Footer />
+    </body>
+</html>
